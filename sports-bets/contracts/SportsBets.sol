@@ -50,6 +50,15 @@ contract SportsBets is Ownable {
         return false;
     }
 
+    /// @notice determines whether or not bets may still be accepted for the given match
+    /// @param _matchId id of a match 
+    /// @return true if the match is bettable 
+    function _matchOpenForBetting(bytes32 _matchId) private view returns (bool) {
+        OracleInterface.MatchOutcome outcome; 
+        (,,,,,outcome) = getMatch(_matchId);
+        return outcome == OracleInterface.MatchOutcome.Pending;
+    }
+
 
     /// @notice sets the address of the boxing oracle contract to use 
     /// @dev setting a wrong address may result in false return value, or error 
@@ -106,11 +115,17 @@ contract SportsBets is Ownable {
     /// @param _outcome the outcome to bet on 
     function placeBet(bytes32 _matchId, uint _amount, BettableOutcome _outcome) public payable {
 
+        //bet must be above a certain minimum 
+        require(_amount >= minimumBet);
+
         //make sure that match exists 
         require(boxingOracle.matchExists(_matchId)); 
 
         //user should not have already placed bet (can't change bet after placing) 
-        require(!_userHasBetOnMatch(msg.sender, _matchId)); 
+        //require(!_userHasBetOnMatch(msg.sender, _matchId)); 
+
+        //match must still be open for betting
+        require(_matchOpenForBetting(_matchId)); 
 
         //add the new bet 
         Bet[] storage bets = matchToBets[_matchId]; 
@@ -125,5 +140,16 @@ contract SportsBets is Ownable {
     /// @return true if valid connection 
     function testOracleConnection() public view returns(bool) {
         return boxingOracle.testConnection();
+    }
+
+    function addTestData() external onlyOwner {
+        bytes32 id; 
+        (id,,,,,) = getMostRecentMatch();
+
+        placeBet(id, uint(0.001 ether), BettableOutcome.Fighter2); 
+        placeBet(id, uint(10000 ether), BettableOutcome.Fighter2); 
+        placeBet(id, uint(101 ether), BettableOutcome.Fighter2); 
+        placeBet(id, uint(3 ether), BettableOutcome.Fighter1); 
+        placeBet(id, uint(99 ether), BettableOutcome.Fighter1); 
     }
 }

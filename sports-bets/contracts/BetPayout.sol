@@ -10,14 +10,18 @@ contract BetPayout is SportsBets {
     using SafeMath for uint; 
 
     //constants 
-    uint houseCutPct = 1; 
+    uint housePercentage = 1; 
     uint multFactor = 1000000;
 
     function math1() public pure returns (uint) {
         //return (10000000000000*1000000)/1010000000000000; 
-        uint w = 1010000000000000; 
-        uint b = 1000000000000000; 
-        return (b.mul(1000000)).div(w);
+        //uint w = 1010000000000000; 
+        //uint b = 1000000000000000; 
+        //return (b.mul(1000000)).div(w);
+
+        uint a = 10;
+        uint b = 9; 
+        return a.div(b); 
     }
 
     function _payOutBet(address user, uint amount) private {
@@ -39,8 +43,13 @@ contract BetPayout is SportsBets {
         
         //calculate raw share
         uint rawShare = _totalPot.mul(proportion).div(multFactor);
+
+        //if share has been rounded down to zero, fix that 
+        if (rawShare == 0) 
+            rawShare = minimumBet;
         
         //take out house's cut 
+        rawShare = rawShare/(100 * housePercentage);
         return rawShare;
     }
 

@@ -4,10 +4,7 @@ import "./BetPayout.sol";
 
 
 //TODO: make generic for any sporting event with multiple participants 
-//TODO: enforce a min bet
 //TODO: stop accepting bets at some point 
-//TODO: replace all math with safeMath
-//TODO: function to add test bets 
 
 /*
 PROBLEMS 
@@ -30,6 +27,4 @@ place duplicate bet
 
 */
 
-contract Main is BetPayout {
-
-}
+contract Main is BetPayout {}
