@@ -13,17 +13,6 @@ contract BetPayout is SportsBets {
     uint housePercentage = 1; 
     uint multFactor = 1000000;
 
-    function math1() public pure returns (uint) {
-        //return (10000000000000*1000000)/1010000000000000; 
-        //uint w = 1010000000000000; 
-        //uint b = 1000000000000000; 
-        //return (b.mul(1000000)).div(w);
-
-        uint a = 10;
-        uint b = 9; 
-        return a.div(b); 
-    }
-
     function _payOutBet(address user, uint amount) private {
         user.transfer(amount);
     }
@@ -32,9 +21,8 @@ contract BetPayout is SportsBets {
         owner.transfer(address(this).balance);
     }
 
-    function _isWinningBet(BettableOutcome betOutcome, OracleInterface.MatchOutcome actualOutcome) private pure returns (bool) {
-        return ((betOutcome == BettableOutcome.Fighter1 && actualOutcome == OracleInterface.MatchOutcome.Fighter1) || 
-        (betOutcome == BettableOutcome.Fighter2 && actualOutcome == OracleInterface.MatchOutcome.Fighter2));
+    function _isWinningBet(OracleInterface.MatchOutcome _outcome, uint8 _chosenWinner, int8 _actualWinner) private pure returns (bool) {
+        return _outcome == OracleInterface.MatchOutcome.Decided && _chosenWinner >= 0 && (_chosenWinner == uint8(_actualWinner)); 
     }
 
     function _calculatePayout(uint _winningTotal, uint _totalPot, uint _betAmount) private view returns (uint) {
@@ -53,7 +41,7 @@ contract BetPayout is SportsBets {
         return rawShare;
     }
 
-    function _payOutForMatch(bytes32 _matchId, OracleInterface.MatchOutcome outcome) private {
+    function _payOutForMatch(bytes32 _matchId, OracleInterface.MatchOutcome _outcome, int8 _winner) private {
     
         Bet[] storage bets = matchToBets[_matchId]; 
         uint losingTotal = 0; 
@@ -65,7 +53,7 @@ contract BetPayout is SportsBets {
         uint n;
         for (n = 0; n < bets.length; n++) {
             uint amount = bets[n].amount;
-            if (_isWinningBet(bets[n].outcome, outcome)) {
+            if (_isWinningBet(_outcome, bets[n].chosenWinner, _winner)) {
                 winningTotal = winningTotal.add(amount);
             } else {
                 losingTotal = losingTotal.add(amount);
@@ -75,10 +63,10 @@ contract BetPayout is SportsBets {
 
         //calculate payouts per bet 
         for (n = 0; n < bets.length; n++) {
-            if (outcome == OracleInterface.MatchOutcome.Draw) {
+            if (_outcome == OracleInterface.MatchOutcome.Draw) {
                 payouts[n] = bets[n].amount;
             } else {
-                if (_isWinningBet(bets[n].outcome, outcome)) {
+                if (_isWinningBet(_outcome, bets[n].chosenWinner, _winner)) {
                     payouts[n] = _calculatePayout(winningTotal, totalPot, bets[n].amount); 
                 } else {
                     payouts[n] = 0;
@@ -98,12 +86,13 @@ contract BetPayout is SportsBets {
     
     function checkOutcome(bytes32 _matchId) public returns (OracleInterface.MatchOutcome)  {
         OracleInterface.MatchOutcome outcome; 
+        int8 winner = -1;
 
-        (,,,,, outcome) = boxingOracle.getMatch(_matchId); 
+        (,,,,outcome,winner) = boxingOracle.getMatch(_matchId); 
 
-        if (outcome != OracleInterface.MatchOutcome.Pending) {
+        if (outcome == OracleInterface.MatchOutcome.Decided) {
             if (!matchPaidOut[_matchId]) {
-                _payOutForMatch(_matchId, outcome);
+                _payOutForMatch(_matchId, outcome, winner);
             }
         } 
 

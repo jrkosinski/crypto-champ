@@ -4,9 +4,9 @@ contract OracleInterface {
 
     enum MatchOutcome {
         Pending,    //match has not been fought to decision
+        Underway,   //match has started & is underway
         Draw,       //anything other than a clear winner (e.g. cancelled)
-        Fighter1,   //fighter1 won
-        Fighter2    //fighter2 won
+        Decided     //index of participant who is the winner 
     }
 
     function getPendingMatches() public view returns (bytes32[]);
@@ -18,18 +18,18 @@ contract OracleInterface {
     function getMatch(bytes32 _matchId) public view returns (
         bytes32 id,
         string _name, 
-        string _fighter1, 
-        string _fighter2, 
+        uint participantCount,
         uint _date, 
-        MatchOutcome _outcome);
+        MatchOutcome _outcome, 
+        int8 winner);
 
     function getMostRecentMatch(bool _pending) public view returns (
         bytes32 id,
         string _name, 
-        string _fighter1, 
-        string _fighter2, 
+        uint participantCount,
         uint _date, 
-        MatchOutcome _outcome);
+        MatchOutcome _outcome, 
+        int8 winner);
 
     function testConnection() public pure returns (bool);
 }

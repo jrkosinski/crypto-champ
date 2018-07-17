@@ -327,8 +327,8 @@
           }
         ],
         "contractDependencies": [
-          932,
-          497
+          497,
+          932
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -5111,8 +5111,8 @@
           }
         ],
         "contractDependencies": [
-          932,
-          497
+          497,
+          932
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -9825,5 +9825,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-07-17T12:24:42.873Z"
+  "updatedAt": "2018-07-17T12:29:25.291Z"
 }

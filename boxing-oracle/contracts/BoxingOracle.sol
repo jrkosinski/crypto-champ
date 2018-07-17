@@ -41,18 +41,18 @@ contract BoxingOracle is Ownable {
     struct Match {
         bytes32 id;
         string name;
-        string fighter1;
-        string fighter2;
+        uint8 participantCount;
         uint date; 
         MatchOutcome outcome;
+        int8 winner;
     }
 
     //possible match outcomes 
     enum MatchOutcome {
         Pending,    //match has not been fought to decision
+        Underway,   //match has started & is underway
         Draw,       //anything other than a clear winner (e.g. cancelled)
-        Fighter1,   //fighter1 won
-        Fighter2    //fighter2 won
+        Decided     //index of participant who is the winner 
     }
 
 
@@ -76,19 +76,18 @@ contract BoxingOracle is Ownable {
 
     /// @notice puts a new pending match into the blockchain 
     /// @param _name descriptive name for the match (e.g. Pac vs. Mayweather 2016)
-    /// @param _fighter1 name of the first fighter in match (e.g. Manny Pacquiao) 
-    /// @param _fighter2 name of the second fighter in match
+    /// @param _participantCount the number of participants in the match 
     /// @param _date date set for the match 
     /// @return the unique id of the newly created match 
-    function addMatch(string _name, string _fighter1, string _fighter2, uint _date) onlyOwner public returns (bytes32) {
+    function addMatch(string _name, uint8 _participantCount, uint _date) onlyOwner public returns (bytes32) {
         //hash the crucial info to get a unique id 
-        bytes32 id = keccak256(abi.encodePacked(_name, _fighter1, _fighter2, _date)); 
+        bytes32 id = keccak256(abi.encodePacked(_name, _participantCount, _date)); 
 
         //require that the match be unique (not already added) 
         require(!matchExists(id));
         
         //add the match 
-        uint newIndex = matches.push(Match(id, _name, _fighter1, _fighter2, _date, MatchOutcome.Pending))-1; 
+        uint newIndex = matches.push(Match(id, _name, _participantCount, _date, MatchOutcome.Pending, -1))-1; 
         matchIdToIndex[id] = newIndex+1;
         
         //return the unique id of the new match
@@ -98,7 +97,7 @@ contract BoxingOracle is Ownable {
     /// @notice sets the outcome of a predefined match, permanently on the blockchain
     /// @param _matchId unique id of the match to modify
     /// @param _outcome outcome of the match 
-    function declareOutcome(bytes32 _matchId, MatchOutcome _outcome) onlyOwner external {
+    function declareOutcome(bytes32 _matchId, MatchOutcome _outcome, int8 _winner) onlyOwner external {
 
         //require that it exists
         require(matchExists(_matchId)); 
@@ -107,8 +106,15 @@ contract BoxingOracle is Ownable {
         uint index = _getMatchIndex(_matchId);
         Match storage theMatch = matches[index]; 
 
+        if (_outcome == MatchOutcome.Decided) 
+            require(_winner >= 0 && theMatch.participantCount > uint8(_winner)); 
+
         //set the outcome 
         theMatch.outcome = _outcome;
+        
+        //set the winner (if there is one)
+        if (_outcome == MatchOutcome.Decided) 
+            theMatch.winner = _winner;
     }
 
     /// @notice gets the unique ids of all pending matches, in reverse chronological order
@@ -158,18 +164,18 @@ contract BoxingOracle is Ownable {
     function getMatch(bytes32 _matchId) public view returns (
         bytes32 id,
         string name, 
-        string fighter1, 
-        string fighter2, 
+        uint8 participantCount,
         uint date, 
-        MatchOutcome outcome) {
+        MatchOutcome outcome, 
+        int8 winner) {
         
         //get the match 
         if (matchExists(_matchId)) {
             Match storage theMatch = matches[_getMatchIndex(_matchId)];
-            return (theMatch.id, theMatch.name, theMatch.fighter1, theMatch.fighter2, theMatch.date, theMatch.outcome); 
+            return (theMatch.id, theMatch.name, theMatch.participantCount, theMatch.date, theMatch.outcome, theMatch.winner); 
         }
         else {
-            return (_matchId, "", "", "", 0, MatchOutcome.Pending); 
+            return (_matchId, "", 0, 0, MatchOutcome.Pending, -1); 
         }
     }
 
@@ -179,10 +185,10 @@ contract BoxingOracle is Ownable {
     function getMostRecentMatch(bool _pending) public view returns (
         bytes32 id,
         string name, 
-        string fighter1, 
-        string fighter2, 
+        uint8 participantCount,
         uint date, 
-        MatchOutcome outcome) {
+        MatchOutcome outcome, 
+        int8 winner) {
 
         bytes32 matchId = 0; 
         bytes32[] memory ids;
@@ -215,8 +221,8 @@ contract BoxingOracle is Ownable {
     /// @notice for testing 
     function addTestData() external onlyOwner {
         uint date = now;
-        addMatch("m1", "f1a", "f2a", date);
-        addMatch("m2", "f1b", "f2b", date);
-        addMatch("m3", "f1c", "f2c", date);
+        addMatch("m1", 2, date);
+        addMatch("m2", 2, date);
+        addMatch("m3", 2, date);
     }
 }
