@@ -1,6 +1,5 @@
 
 _cookie = ""; 
-const authTokenKey = "authToken";
 
 function setCookie(name, value, days) {
     var expires = "";
@@ -34,25 +33,8 @@ function deleteCookie(name) {
     setCookie(name,"",-1);
 }
 
-function setAuthToken(token){
-    setCookie(authTokenKey, token, 3); 
-}
-
-function deleteAuthToken(token){
-    deleteCookie(authTokenKey);
-}
-
-function getAuthToken(){
-    var output = getCookie(authTokenKey); 
-    console.log('auth token: ' + output);
-    return output; 
-}
 
 window.cookies = {
     setCookie: setCookie,
-    getCookie: getCookie, 
-    deleteCookie : deleteCookie,
-    setAuthToken : setAuthToken,
-    getAuthToken : getAuthToken,
-    deleteAuthToken: deleteAuthToken
+    getCookie: getCookie
 };

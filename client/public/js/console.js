@@ -11,18 +11,16 @@ function DataCoordinator() {
         exception.try(() => {
             layoutComponents.matches.progress(true); 
 
-            /*
-            api.getOrders(showAll, (data, err) => {
-                layoutComponents.orders.progress(false); 
+            api.getMatches(!showAll, (data, err) => {
+                layoutComponents.matches.progress(false); 
                 //TODO: handle error 
                 if (err) {
-
+                    
                 }
                 else {
-                    layoutComponents.orders.update({ data: { all: data }}); 
+                    layoutComponents.matches.update(data); 
                 }
             }); 
-            */
         });
     };
     
@@ -55,10 +53,10 @@ function DataCoordinator() {
         _this.refreshMatches();
         _this.refreshBets();
 
-        setInterval(() => {
-            _this.refreshMatches(layoutComponents.matches.showAll()); 
-            _this.refreshBets(layoutComponents.bets.showAll()); 
-        }, 60000); 
+        //setInterval(() => {
+        //    _this.refreshMatches(layoutComponents.matches.showAll()); 
+        //    _this.refreshBets(layoutComponents.bets.showAll()); 
+        //}, 60000); 
     }; 
 }
 

@@ -78,31 +78,7 @@ function startup(callback){
         hideAllForms();
 
         //if auth is enabled, check auth first
-        if (config.authEnabled){
-            
-            if (authTokenExists()){               
-                showProgress(); 
-
-                api.authorize((response, err) => {
-                    hideProgress(); 
-
-                    if (response){
-                        if (!response.authorized)
-                            showLogin();
-                        else
-                            callback();
-                    }
-
-                    if (err)
-                        showError(err); 
-                });
-            }
-            else{
-                showLogin();
-            }
-        }
-        else
-            showMainScreen();
+        showMainScreen();
 
         $("#loginButton").click(function () {
             login();

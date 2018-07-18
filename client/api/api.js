@@ -1,5 +1,9 @@
 'use strict'; 
 
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
+const exception = require('happy-try-catch').create({logPrefix:'API'});
+
 const contractInterface = require('./contractInterface'); 
 
 const Web3 = require('web3'); 
@@ -21,3 +25,30 @@ const contract = new web3.eth.Contract(contractInterface.abi, web3.utils.toCheck
 //for(let p in contract) console.log(p);
 
 //contract.methods.testOracleConnection().call().then(console.log).catch(console.error);
+
+const getMatches = (query) => {
+    return new Promise((resolve, reject) => {
+        exception.try(() => {
+            let f = contract.methods.getBettableMatches(); 
+            if (query.pendingOnly) {
+                f = contract.methods.getBettableMatches(); 
+            }
+            
+            f.call()
+            .then((data) => {
+                resolve(data); 
+            })
+            .catch((e) => {
+                reject(e);
+            });
+        }, {
+            onError: (e) => {
+                reject(e); 
+            }
+        });
+    });
+};
+
+module.exports = {
+    getMatches
+}

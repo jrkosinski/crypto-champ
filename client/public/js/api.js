@@ -10,7 +10,7 @@ function execApiCall (url, method, data, callback) {
         contentType: 'application/json',
         cache: false,
         beforeSend: (req) => {
-            req.setRequestHeader("authtoken", cookies.getAuthToken())
+            
         },
         success: function (result) {
             console.log(result);
@@ -31,17 +31,12 @@ function execApiCall (url, method, data, callback) {
     $.ajax(url, options);
 }
 
-function authenticate(credentials, callback) {
-    execApiCall(config.apiUrl + '/auth', 'POST', credentials, callback);
-}
-
-function authorize(callback){
-    execApiCall(config.apiUrl + '/auth', 'GET', {}, callback);
+function getMatches(pendingOnly, callback) {
+    execApiCall(config.apiUrl + '/matches', 'GET', {}, callback);
 }
 
 $(document).ready(function () {
     window.api = {
-        authenticate,
-        authorize
+        getMatches
     };
 }); 

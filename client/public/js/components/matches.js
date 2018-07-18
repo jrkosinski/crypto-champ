@@ -24,6 +24,10 @@ function MatchesComponent(dataCoordinator) {
         });
     }; 
 
+    const formatMatchDate = (timestamp) => {
+        return timestamp;
+    };
+
     this.showAll = () => { return _showAll; }
 
     /**
@@ -52,30 +56,19 @@ function MatchesComponent(dataCoordinator) {
     this.update = (data) => {   
         exception.try(() => {
 
-            /*
-            if (data && data.data && data.data.all) {
-                $("#ordersContent").empty();
+            if (data) {
+                $("#matchesContent").empty();
 
-                let orders = data.data.all; 
+                let matches = data;
 
-                for (let n=0; n<orders.length; n++) {
-                    let order = orders[n]; 
-
-                    let status = order.status; 
-                    if (status.length > 24) 
-                        status = status.substring(0, 24); 
-
-                    if (!order.side) 
-                        order.side = ''; 
+                for (let n=0; n<matches.length; n++) {
+                    let match = matches[n]; 
 
                     let html = `<div class='console-row tooltip'>` + 
-                    `<span class='small-gold-text console-cell' style='width:150px'>${order.exchange}/${order.symbol}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:160px'>${status}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:50px'>${order.side}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:50px'>${order.type}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:50px'>${order.quantity}</span>` + 
-                    `<span class='small-green-text console-cell' style='width:100px'>${order.price}</span>` + 
-                    `<span class='tooltip-text'>${formatTooltipText(order)}<span>` + 
+                    `<span class='small-gold-text console-cell' style='width:300px'>${match.name}/${order.symbol}</span>` + 
+                    `<span class='small-gold-text console-cell' style='width:160px'>${formatMatchDate(match.date)}</span>` + 
+                    `<span class='small-gold-text console-cell' style='width:50px'>${match.outcome}</span>` + 
+                    //`<span class='tooltip-text'>${formatTooltipText(order)}<span>` + 
                     `</div>`;
                     $("#ordersContent").append(html); 
                 }

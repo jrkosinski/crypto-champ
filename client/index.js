@@ -4,6 +4,8 @@ const express = require('express');
 const app = express();
 const exception = require('happy-try-catch').create({'logPrefix':'web3'});
 const api = require('./api/api');
+const async = require('asyncawait/async');
+const await = require('asyncawait/await');
 
 function run (){
     var sendFile = (res, filename) => {
@@ -15,6 +17,12 @@ function run (){
     var registerGetFile = (filename) => {
         app.get(filename, (req, res) => { 
             sendFile(res, filename);
+        });
+    }
+
+    function executeApiCall(req, res, call) {
+        exception.try(() => {
+            res.send(await(call()));
         });
     }
 
@@ -42,6 +50,14 @@ function run (){
     registerGetFile('/images/refresh.png');
     registerGetFile('/images/settings.png');
     registerGetFile('/images/close-button.png');
+
+
+    app.get('/matches', async((req, res) => {
+        console.log('GET /matches');
+        executeApiCall(req, res, async(() => { 
+            return await(api.getMatches(req.query, req.body));
+        })); 
+    }));
 
     //open http port 
     const httpPort = 2010;
