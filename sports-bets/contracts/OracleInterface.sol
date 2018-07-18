@@ -32,4 +32,6 @@ contract OracleInterface {
         int8 winner);
 
     function testConnection() public pure returns (bool);
+
+    function addTestData() public; 
 }

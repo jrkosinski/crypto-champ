@@ -77,6 +77,12 @@ contract SportsBets is Ownable {
         return boxingOracle.getPendingMatches(); 
     }
 
+    /// @notice gets a list ids of all matches
+    /// @return array of match ids 
+    function getMatches() public view returns (bytes32[]) {
+        return boxingOracle.getAllMatches(); 
+    }
+
     /// @notice returns the full data of the specified match 
     /// @param _matchId the id of the desired match
     /// @return match data 
@@ -141,6 +147,8 @@ contract SportsBets is Ownable {
 
     function addTestData() external onlyOwner {
         bytes32 id; 
+        boxingOracle.addTestData();
+
         (id,,,,,) = getMostRecentMatch();
 
         placeBet(id, uint(0.001 ether), 1); 

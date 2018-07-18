@@ -13,18 +13,32 @@ contract BetPayout is SportsBets {
     uint housePercentage = 1; 
     uint multFactor = 1000000;
 
-    function _payOutBet(address user, uint amount) private {
-        user.transfer(amount);
+    /// @notice pays out winnings to a user 
+    /// @param _user the user to whom to pay out 
+    /// @param _amount the amount to pay out 
+    function _payOutWinnings(address _user, uint _amount) private {
+        _user.transfer(_amount);
     }
 
+    /// @notice transfers any remaining to the house (the house's cut)
     function _transferToHouse() private {
         owner.transfer(address(this).balance);
     }
 
+    /// @notice determines whether or not the given bet is a winner 
+    /// @param _outcome the match's actual outcome
+    /// @param _chosenWinner the participant chosen by the bettor as the winner 
+    /// @param _actualWinner the actual winner 
+    /// @return true if the bet was a winner
     function _isWinningBet(OracleInterface.MatchOutcome _outcome, uint8 _chosenWinner, int8 _actualWinner) private pure returns (bool) {
         return _outcome == OracleInterface.MatchOutcome.Decided && _chosenWinner >= 0 && (_chosenWinner == uint8(_actualWinner)); 
     }
 
+    /// @notice calculates the amount to be paid out for a bet of the given amount, under the given circumstances
+    /// @param _winningTotal the total monetary amount of winning bets 
+    /// @param _totalPot the total amount in the pot for the match 
+    /// @param _betAmount the amount of this particular bet 
+    /// @return an amount in wei
     function _calculatePayout(uint _winningTotal, uint _totalPot, uint _betAmount) private view returns (uint) {
         //calculate proportion
         uint proportion = (_betAmount.mul(multFactor)).div(_winningTotal);
@@ -41,6 +55,10 @@ contract BetPayout is SportsBets {
         return rawShare;
     }
 
+    /// @notice calculates how much to pay out to each winner, then pays each winner the appropriate amount 
+    /// @param _matchId the unique id of the match
+    /// @param _outcome the match's outcome
+    /// @param _winner the index of the winner of the match (if not a draw)
     function _payOutForMatch(bytes32 _matchId, OracleInterface.MatchOutcome _outcome, int8 _winner) private {
     
         Bet[] storage bets = matchToBets[_matchId]; 
@@ -76,7 +94,7 @@ contract BetPayout is SportsBets {
 
         //pay out the payouts 
         for (n = 0; n < payouts.length; n++) {
-            _payOutBet(bets[n].user, payouts[n]); 
+            _payOutWinnings(bets[n].user, payouts[n]); 
         }
 
         //transfer the remainder to the owner
@@ -84,6 +102,9 @@ contract BetPayout is SportsBets {
     }
     
     
+    /// @notice check the outcome of the given match; if ready, will trigger calculation of payout, and actual payout to winners
+    /// @param _matchId the id of the match to check
+    /// @return the outcome of the given match 
     function checkOutcome(bytes32 _matchId) public returns (OracleInterface.MatchOutcome)  {
         OracleInterface.MatchOutcome outcome; 
         int8 winner = -1;

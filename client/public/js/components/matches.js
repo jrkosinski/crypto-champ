@@ -73,7 +73,6 @@ function MatchesComponent(dataCoordinator) {
                     $("#ordersContent").append(html); 
                 }
             }
-            */
         });
     };
     

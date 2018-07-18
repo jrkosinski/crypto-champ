@@ -139,22 +139,31 @@
       "payable": false,
       "stateMutability": "pure",
       "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "addTestData",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ],
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.4.17;\n\ncontract OracleInterface {\n\n    enum MatchOutcome {\n        Pending,    //match has not been fought to decision\n        Underway,   //match has started & is underway\n        Draw,       //anything other than a clear winner (e.g. cancelled)\n        Decided     //index of participant who is the winner \n    }\n\n    function getPendingMatches() public view returns (bytes32[]);\n\n    function getAllMatches() public view returns (bytes32[]);\n\n    function matchExists(bytes32 _matchId) public view returns (bool); \n\n    function getMatch(bytes32 _matchId) public view returns (\n        bytes32 id,\n        string _name, \n        uint participantCount,\n        uint _date, \n        MatchOutcome _outcome, \n        int8 winner);\n\n    function getMostRecentMatch(bool _pending) public view returns (\n        bytes32 id,\n        string _name, \n        uint participantCount,\n        uint _date, \n        MatchOutcome _outcome, \n        int8 winner);\n\n    function testConnection() public pure returns (bool);\n}\n",
+  "source": "pragma solidity ^0.4.17;\n\ncontract OracleInterface {\n\n    enum MatchOutcome {\n        Pending,    //match has not been fought to decision\n        Underway,   //match has started & is underway\n        Draw,       //anything other than a clear winner (e.g. cancelled)\n        Decided     //index of participant who is the winner \n    }\n\n    function getPendingMatches() public view returns (bytes32[]);\n\n    function getAllMatches() public view returns (bytes32[]);\n\n    function matchExists(bytes32 _matchId) public view returns (bool); \n\n    function getMatch(bytes32 _matchId) public view returns (\n        bytes32 id,\n        string _name, \n        uint participantCount,\n        uint _date, \n        MatchOutcome _outcome, \n        int8 winner);\n\n    function getMostRecentMatch(bool _pending) public view returns (\n        bytes32 id,\n        string _name, \n        uint participantCount,\n        uint _date, \n        MatchOutcome _outcome, \n        int8 winner);\n\n    function testConnection() public pure returns (bool);\n\n    function addTestData() public; \n}\n",
   "sourcePath": "/media/acer/D/clients/self/blockchain/ethereum/solidity/crypto-champ/crypto-champ/sports-bets/contracts/OracleInterface.sol",
   "ast": {
     "absolutePath": "/media/acer/D/clients/self/blockchain/ethereum/solidity/crypto-champ/crypto-champ/sports-bets/contracts/OracleInterface.sol",
     "exportedSymbols": {
       "OracleInterface": [
-        492
+        495
       ]
     },
-    "id": 493,
+    "id": 496,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -174,9 +183,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 492,
+        "id": 495,
         "linearizedBaseContracts": [
-          492
+          495
         ],
         "name": "OracleInterface",
         "nodeType": "ContractDefinition",
@@ -274,7 +283,7 @@
               ],
               "src": "388:11:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "339:61:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -340,7 +349,7 @@
               ],
               "src": "451:11:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "406:57:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -423,7 +432,7 @@
               ],
               "src": "528:6:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "469:66:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -638,7 +647,7 @@
               ],
               "src": "598:149:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "542:206:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -853,7 +862,7 @@
               ],
               "src": "817:149:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "754:213:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -909,27 +918,56 @@
               ],
               "src": "1019:6:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "973:53:3",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 494,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "addTestData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 492,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1052:2:3"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 493,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1061:0:3"
+            },
+            "scope": 495,
+            "src": "1032:30:3",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
           }
         ],
-        "scope": 493,
-        "src": "26:1002:3"
+        "scope": 496,
+        "src": "26:1039:3"
       }
     ],
-    "src": "0:1029:3"
+    "src": "0:1066:3"
   },
   "legacyAST": {
     "absolutePath": "/media/acer/D/clients/self/blockchain/ethereum/solidity/crypto-champ/crypto-champ/sports-bets/contracts/OracleInterface.sol",
     "exportedSymbols": {
       "OracleInterface": [
-        492
+        495
       ]
     },
-    "id": 493,
+    "id": 496,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -949,9 +987,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 492,
+        "id": 495,
         "linearizedBaseContracts": [
-          492
+          495
         ],
         "name": "OracleInterface",
         "nodeType": "ContractDefinition",
@@ -1049,7 +1087,7 @@
               ],
               "src": "388:11:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "339:61:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -1115,7 +1153,7 @@
               ],
               "src": "451:11:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "406:57:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -1198,7 +1236,7 @@
               ],
               "src": "528:6:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "469:66:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -1413,7 +1451,7 @@
               ],
               "src": "598:149:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "542:206:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -1628,7 +1666,7 @@
               ],
               "src": "817:149:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "754:213:3",
             "stateMutability": "view",
             "superFunction": null,
@@ -1684,18 +1722,47 @@
               ],
               "src": "1019:6:3"
             },
-            "scope": 492,
+            "scope": 495,
             "src": "973:53:3",
             "stateMutability": "pure",
             "superFunction": null,
             "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 494,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "addTestData",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 492,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1052:2:3"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 493,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1061:0:3"
+            },
+            "scope": 495,
+            "src": "1032:30:3",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
           }
         ],
-        "scope": 493,
-        "src": "26:1002:3"
+        "scope": 496,
+        "src": "26:1039:3"
       }
     ],
-    "src": "0:1029:3"
+    "src": "0:1066:3"
   },
   "compiler": {
     "name": "solc",
@@ -1703,5 +1770,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-07-18T03:32:07.741Z"
+  "updatedAt": "2018-07-18T16:08:20.341Z"
 }
