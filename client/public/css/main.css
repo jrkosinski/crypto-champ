@@ -1,0 +1,253 @@
+
+body {
+    line-height: 1; }
+  
+  a {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent; }
+  
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #cccccc;
+    margin: 1em 0;
+    padding: 0; }
+  
+  input, select {
+    vertical-align: middle; }
+  
+  textarea {
+    resize: vertical; 
+  }
+  
+  html {
+    height: 100%;
+    position: relative;
+    -webkit-text-size-adjust: none;
+    font-size-adjust: none;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    -ms-touch-action: none;
+    overflow-x: hidden; }
+  
+  body {
+    height: 100%;
+    background-color: black;
+    -webkit-tap-highlight-color: transparent;
+    -ms-touch-action: none;
+    position: relative;
+    font-family: 'nationalThin';
+    font-size: 20px;
+    color: black;
+    margin: 0;
+    padding: 0; }
+  
+  a {
+    font-family: 'robotoRegular';
+    font-size: 16px;
+    color: #f0c55e;
+    text-decoration: none;
+    font-weight: normal;
+    transition: all .5s; }
+  
+  p {
+    font-family: 'nationalThin';
+    font-size: 21px;
+    color: #b2aeab;
+    letter-spacing: 0.08em;
+    line-height: 150%; }
+  
+  h1, h2, h3, h4, h5, p {
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    line-height: 100%; }
+  
+  h1 {
+    font-family: 'nationalLight';
+    font-size: 34px;
+    color: #333949;
+    letter-spacing: .15em;
+    text-transform: uppercase; }
+  
+  h2 {
+    font-family: 'nationalLight';
+    font-size: 25px;
+    color: #f0c55e;
+    letter-spacing: .15em;
+    text-transform: uppercase; }
+  
+  .overlay-form {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(7, 4, 5, 0.96);
+    color: #f0f3fa;
+    z-index: 99; 
+    
+    /*visibility:visible; width:500px; height:500px; background-color:white; position:absolute; top:50px; left:20px;*/
+    }
+  
+  .form-outline {
+      position: relative;
+      width: 61%;
+      max-width: 800px;
+      border-radius: 4px;
+      top: 5%;
+      padding: 3%;
+      position: absolute;
+      left: 50%;
+      -webkit-transform: translatex(-50%);
+      -ms-transform: translatex(-50%);
+      transform: translatex(-50%); 
+      background: #37383d;
+      background-size: contain;
+      box-shadow: 0 0 20px rgba(240, 243, 250, 0.2);}
+  
+  .button {
+      float: left;
+      margin-right: 15px;
+      padding-left:15px;
+      padding-right:15px;
+      padding-top:5px;
+      padding-bottom:5px;
+      cursor:pointer;
+      background:gray;
+      border-radius:5px;
+  }
+  
+  .title-large {
+      font-family: 'nationalThin';
+      font-size: 24px;
+      color: #eeeeee;
+      letter-spacing: 0.08em;
+      padding-bottom:0px;
+      vertical-align: bottom;
+  }
+  
+  .title-medium {
+      font-family: 'nationalThin';
+      font-size: 18px;
+      color: #eeeeee;
+      letter-spacing: 0.08em;
+      padding-bottom:8px;
+  }
+  
+  .error-title {
+      font-family: 'nationalThin';
+      font-size: 18px;
+      color: #f0c55e;
+      letter-spacing: 0.08em;
+      padding-bottom:8px;
+  }
+  
+  .title-small {
+      font-family: 'nationalThin';
+      font-size: 16px;
+      color: #f0c55e;
+      letter-spacing: 0.08em;
+      padding-bottom:8px;
+  }
+  
+  .caption {
+      font-family: 'nationalThin';
+      font-size: 14px;
+      color: #b2aeab;
+      letter-spacing: 0.08em;
+      padding-bottom:10px;
+  }
+  
+  .main-div {
+      visibility:visible; 
+      position:absolute; 
+      top:10px; 
+      left:20px;
+      width:100%;
+  }
+  
+  .textfield {
+      font-family:'courier';
+      font-size: 14px;
+      color:limegreen;
+      width:250px;
+      background-color:black
+  }
+  
+  .dropdownlist {
+      font-family:'courier';
+      font-size: 14px;
+      color:limegreen;
+      width:250px;
+      background-color:black
+  }
+  
+  .textarea {
+      font-family:'courier';
+      font-size: 14px;
+  }
+  
+  .drag-drop-area {
+      width:500px; 
+      height:110px;
+      background-color:gray;
+      margin-bottom: 10px;
+      text-align: center;
+      cursor: pointer;
+  }
+  
+  .drag-drop-text {
+      margin-top: 20px;
+      vertical-align: center;
+  }
+  
+  .progress-overlay {
+      width:100vw;
+      height:400vh; 
+      z-index: 100;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.5);
+  }
+  
+  .close-button {
+      width:20px;
+      height:20px;
+      float:right;
+      margin-top:3px;
+      margin-right:3px;
+      cursor: pointer;
+  }
+  
+  .close-error-button {
+      width:20px;
+      height:20px;
+      float:right;
+      margin-top:3px;
+      margin-right:3px;
+      cursor: pointer;
+  }
+  
+  .align-right {
+    float:right;
+    margin-right:40px;
+    width:100px;
+    margin-bottom:0px;
+    vertical-align: bottom;
+  }
+  
+  #refreshButton {
+    float:left;
+    margin-bottom:8px;
+    margin-left:90vw;
+  }
+  

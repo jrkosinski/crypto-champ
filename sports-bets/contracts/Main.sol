@@ -3,8 +3,8 @@ pragma solidity ^0.4.17;
 import "./BetPayout.sol";
 
 
-//TODO: make generic for any sporting event with multiple participants 
-//TODO: stop accepting bets at some point 
+//TODO: add participant names 
+//TODO: add function to get current pending bets & completed bets
 
 /*
 PROBLEMS 
@@ -27,4 +27,11 @@ place duplicate bet
 
 */
 
-contract Main is BetPayout {}
+contract Main is BetPayout {
+
+    /// @notice gets the address of this contract 
+    /// @return address 
+    function getAddress() public view returns (address) {
+        return this;
+    }
+}
