@@ -10,7 +10,7 @@ import "./OracleInterface.sol";
 contract SportsBets is Disableable {
 
     //boxing results oracle 
-    address internal boxingOracleAddr = 0x132E2c9F752992D6Dc48EC3D101E721654bB0754;
+    address internal boxingOracleAddr = 0xeBf3C3b116fC39b05a4B6E24aCB3C7c5e604d07B;
     OracleInterface internal boxingOracle = OracleInterface(boxingOracleAddr); 
 
     //constants
@@ -158,7 +158,8 @@ contract SportsBets is Disableable {
         require(_matchOpenForBetting(_matchId)); 
 
         //transfer the money into the account 
-        address(this).transfer(msg.value);
+        //TODO: why this not work
+        //address(this).transfer(msg.value);
 
         //add the new bet 
         Bet[] storage bets = matchToBets[_matchId]; 

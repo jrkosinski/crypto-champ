@@ -1378,16 +1378,10 @@
     "4447": {
       "events": {},
       "links": {},
-      "address": "0x4ac562dbcba73fae01f6e74773183cc394f98512",
-      "transactionHash": "0x67f077fb09603116563e90ac04239726c7e41e35833e8eb5b624a6b346f32d51"
-    },
-    "1531980460080": {
-      "events": {},
-      "links": {},
-      "address": "0xfa8f0d41c3db9d5e4c389e3be2dda34ae8043193",
-      "transactionHash": "0xbae23d134aa8fc4ddc6b64c2a63bb58aec321b53191a9cdca8424a6d0ebe1735"
+      "address": "0xbc168cb4cbbbc85dd949dc15104bbc5ff4f1445d",
+      "transactionHash": "0xe506cd727657388f0b50d210c42b125381c9420840dbec19f0623673592656c2"
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-07-19T09:18:43.004Z"
+  "updatedAt": "2018-07-19T12:25:28.457Z"
 }
