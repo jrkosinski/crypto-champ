@@ -32,11 +32,16 @@ function execApiCall (url, method, data, callback) {
 }
 
 function getMatches(pendingOnly, callback) {
-    execApiCall(config.apiUrl + '/matches', 'GET', {}, callback);
+    execApiCall(config.apiUrl + '/matches?pending=' + (pendingOnly ? 'true': 'false'), 'GET', {}, callback);
+}
+
+function getMatchDetails(matchId, callback) {
+    execApiCall(config.apiUrl + '/matches?id=' + matchId, 'GET', {}, callback);
 }
 
 $(document).ready(function () {
     window.api = {
-        getMatches
+        getMatches,
+        getMatchDetails
     };
 }); 

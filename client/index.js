@@ -53,16 +53,20 @@ function run (){
 
 
     app.get('/matches', async((req, res) => {
-        console.log('GET /matches');
         executeApiCall(req, res, async(() => { 
-            return await(api.getMatches(req.query, req.body));
+            if (req.query && req.query.id) {
+                console.log('GET /matches?' + req.query.id);
+                return await(api.getMatchDetails(req.query)); 
+            } else {
+                console.log('GET /matches');
+                return await(api.getMatches(req.query));
+            }
         })); 
     }));
 
     //open http port 
     const httpPort = 2010;
     app.listen(httpPort, () => console.log('cryptochamp client listening on port ' + httpPort));
-
 }
 
 run();

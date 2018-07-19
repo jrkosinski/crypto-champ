@@ -20,13 +20,31 @@ web3.eth.getAccounts()
 
 //const contract = web3.eth.contract(abi).at(web3.toChecksumAddress("0x7bf7ae2da6013aa8de29627e29e4b9fa807d4469"));
 //const contract = new web3.eth.Contract(abi.abi, web3.utils.toChecksumAddress("0x7bf7ae2da6013aa8de29627e29e4b9fa807d4469")); 
-const contract = new web3.eth.Contract(contractInterface.abi, web3.utils.toChecksumAddress("0x945b9f80fd412b90aea096d623e639bceec9f4e4")); 
+const contract = new web3.eth.Contract(contractInterface.abi, web3.utils.toChecksumAddress("0x34125b18080afa354fd19152b20ddb009550501e")); 
 
 //for(let p in contract) console.log(p);
 
 //contract.methods.testOracleConnection().call().then(console.log).catch(console.error);
 
-contract.methods.addTestData().call();
+//contract.methods.addTestData().call();
+
+const callMethod = async((method) => {
+    return new Promise((resolve, reject) => {
+        exception.try(() => {
+            method.call()
+            .then((data) => {
+                resolve(data); 
+            })
+            .catch((e) => {
+                reject(e);
+            });
+        }, {
+            onError: (e) => {
+                reject(e); 
+            }
+        });
+    });
+});
 
 const getMatches = (query) => {
     return new Promise((resolve, reject) => {
@@ -51,6 +69,29 @@ const getMatches = (query) => {
     });
 };
 
+const getMatchDetails = (query) => {
+    return new Promise((resolve, reject) => {
+        exception.try(() => {
+            if (query.id) {
+                contract.methods.getMatch(query.id).call()
+                .then((data) => {
+                    resolve(data); 
+                })
+                .catch((e) => {
+                    reject(e);
+                });
+            } else {
+                resolve(null);
+            }
+        }, {
+            onError: (e) => {
+                reject(e); 
+            }
+        });
+    });
+}
+
 module.exports = {
-    getMatches
+    getMatches,
+    getMatchDetails
 }

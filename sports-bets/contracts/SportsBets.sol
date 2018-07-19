@@ -10,7 +10,7 @@ import "./OracleInterface.sol";
 contract SportsBets is Ownable {
 
     //boxing results oracle 
-    address internal boxingOracleAddr = 0xa5f7019754316B93d5E14D85fbd29E2477124dAE;
+    address internal boxingOracleAddr = 0x9f91e4df7554ED7c032172b26979749cb608d10c;
     OracleInterface internal boxingOracle = OracleInterface(boxingOracleAddr); 
 
     //constants

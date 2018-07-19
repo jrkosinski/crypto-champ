@@ -18,7 +18,13 @@ function DataCoordinator() {
                     
                 }
                 else {
-                    layoutComponents.matches.update(data); 
+                    if (data && data.length) {
+                        for (let n=0; n<data.length; n++) {
+                            api.getMatchDetails(data[n], (match) => {
+                                layoutComponents.matches.addOrUpdate(match); 
+                            });
+                        }
+                    }
                 }
             }); 
         });
@@ -124,43 +130,28 @@ const _dataCoordinator = new DataCoordinator();
 const layoutConfig = {
     content: [
         {
-            type: "row", 
+            type: "column", 
             content: [
                 {
-                    type: "column",
-                        content: [
-                            {
-                                type: "component",
-                                componentName: "bets",
-                                componentState: { label:"true"}
-                            }
-                        ]
-                },
-                {
-                    type: "column",
+                    type: "row",
                     content: [
                         {
-                            type: "row", 
-                            content: [
-                                {
-                                    type: "component",
-                                    componentName: "matches",
-                                    componentState: { label:"true"}
-                                }
-                            ]
-                        },
-                        {
-                            type: "row", 
-                            content: [
-                                {
-                                    type: "component",
-                                    componentName: "pnl",
-                                    componentState: { label:"true"}
-                                }
-                            ]
+                            type: "component",
+                            componentName: "matches",
+                            componentState: { label:"true"}
                         }
                     ]
-                }
+                },
+                {
+                    type: "row",
+                    content: [
+                        {
+                            type: "component",
+                            componentName: "bets",
+                            componentState: { label:"true"}
+                        }
+                    ]
+                },
             ]
         }
     ]

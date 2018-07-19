@@ -1,8 +1,11 @@
 'use strict'; 
 
+
 function MatchesComponent(dataCoordinator) {
     const _this = this; 
+    const _matches = {};
     let _showAll = false;
+    const _months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; 
 
     ComponentBase.call(this, dataCoordinator);
 
@@ -15,18 +18,51 @@ function MatchesComponent(dataCoordinator) {
             //let output = `<span class='small-green-text console-cell' style='width:130px'>${order.orderId}</span>` + 
             //`<span class='small-green-text console-cell' style='width:130px'>${order.timestamp}</span>`; 
 
-            let output = "";
-            //let output = `${order.orderId}<br/><br/>` + 
-            //`${new Date(Date.parse(order.timestamp.toString())).toString()}<br/><br/>` + 
-            //`${order.fullStatus ? order.fullStatus : order.status}`; 
+            let output = `${match.id}<br/><br/>` + 
+            `${match.name} ${formatMatchDate(match.date)}<br/><br/>` + 
+            `${match.participantCount} participants:<br/><br/>` + 
+            `${formatMatchOutcome(match.outcome)}`; 
+
 
             return output; 
         });
     }; 
 
     const formatMatchDate = (timestamp) => {
-        return timestamp;
+        let output = timestamp; 
+
+        //TODO: convert for local timezone
+        const date = new Date(timestamp * 1000); 
+        output = `${_months[(date.getMonth())]} ${date.getDay()}`;
+
+        if (date.getFullYear != new Date().getFullYear())
+            output += ', ' + date.getFullYear(); 
+
+        return output; 
     };
+
+    const formatMatchOutcome = (outcome) => {
+        let output = 'unknown'; 
+
+        switch(parseInt(outcome)) {
+            case 0: 
+            output = 'pending';
+                break;
+            case 1: 
+                output = 'underway';
+                break;
+            case 2: 
+                output = 'draw';
+                break;
+            case 3: 
+                output = 'decided';
+                break;
+            default:
+                output= outcome;
+        }
+
+        return output; 
+    }
 
     this.showAll = () => { return _showAll; }
 
@@ -53,28 +89,25 @@ function MatchesComponent(dataCoordinator) {
         _this.toolbar.setMenuItemText(0, menuItemText); 
     };
 
-    this.update = (data) => {   
-        exception.try(() => {
 
-            if (data) {
-                $("#matchesContent").empty();
+    this.addOrUpdate = (match) => {
+        if (match) {
+            _matches[match.id] = match; 
+            let rowId = `div-match-${match.id}`;
 
-                let matches = data;
-
-                for (let n=0; n<matches.length; n++) {
-                    let match = matches[n]; 
-
-                    let html = `<div class='console-row tooltip'>` + 
-                    `<span class='small-gold-text console-cell' style='width:300px'>${match.name}/${order.symbol}</span>` + 
+            let rowHtml = `<span class='small-gold-text console-cell' style='width:300px'>${match.name}</span>` + 
                     `<span class='small-gold-text console-cell' style='width:160px'>${formatMatchDate(match.date)}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:50px'>${match.outcome}</span>` + 
-                    //`<span class='tooltip-text'>${formatTooltipText(order)}<span>` + 
-                    `</div>`;
-                    $("#ordersContent").append(html); 
-                }
+                    `<span class='small-gold-text console-cell' style='width:100px'>${formatMatchOutcome(match.outcome)}</span>` +
+                    `<span class='tooltip-text'>${formatTooltipText(match)}<span>`;
+            
+            console.log($("#" + rowId));
+            if ($("#" + rowId).length) {
+                $("#" + rowId).html(rowHtml); 
+            } else {
+                $("#matchesContent").append(`<div class='console-row tooltip' id='${rowId}'>${rowHtml}</div>`);
             }
-        });
-    };
+        }
+    }
     
     this.render = () => {
         return exception.try(() => {
