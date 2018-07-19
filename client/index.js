@@ -68,6 +68,18 @@ function run (){
         })); 
     }));
 
+    app.get('./bets', async((req, res) => {
+        executeApiCall(req, res, async(() => { 
+            if (req.query && req.query.id) {
+                console.log('GET /bets?' + req.query.id);
+                return await(api.getBetDetails(req.query)); 
+            } else {
+                console.log('GET /bets');
+                return await(api.getBets(req.query));
+            }
+        })); 
+    })); 
+
     //open http port 
     const httpPort = 2010;
     app.listen(httpPort, () => console.log('cryptochamp client listening on port ' + httpPort));

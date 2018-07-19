@@ -2,7 +2,10 @@
 
 function BetsComponent(dataCoordinator) {
     const _this = this; 
+    const _bets = {}; 
     let _showAll = false;
+    let _matches = {}; 
+    const _months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; 
 
     ComponentBase.call(this, dataCoordinator);
 
@@ -23,6 +26,42 @@ function BetsComponent(dataCoordinator) {
             return output; 
         });
     }; 
+
+    const formatMatchDate = (timestamp) => {
+        let output = timestamp; 
+
+        //TODO: convert for local timezone
+        const date = new Date(timestamp * 1000); 
+        output = `${_months[(date.getMonth())]} ${date.getDay()}`;
+
+        if (date.getFullYear != new Date().getFullYear())
+            output += ', ' + date.getFullYear(); 
+
+        return output; 
+    };
+
+    const formatMatchOutcome = (outcome) => {
+        let output = 'unknown'; 
+
+        switch(parseInt(outcome)) {
+            case 0: 
+            output = 'pending';
+                break;
+            case 1: 
+                output = 'underway';
+                break;
+            case 2: 
+                output = 'draw';
+                break;
+            case 3: 
+                output = 'decided';
+                break;
+            default:
+                output= outcome;
+        }
+
+        return output; 
+    };
 
     this.showAll = () => { return _showAll; }
 
@@ -49,40 +88,30 @@ function BetsComponent(dataCoordinator) {
         _this.toolbar.setMenuItemText(0, menuItemText); 
     };
 
-    this.update = (data) => {   
-        exception.try(() => {
+    this.addOrUpdate = (bet) => {
+        if (match) {
+            _bets[bet.matchId] = bet; 
+            const matchId = bet.matchId;
+            let rowId = `div-bet-${matchId}`;
 
-            /*
-            if (data && data.data && data.data.all) {
-                $("#ordersContent").empty();
-
-                let orders = data.data.all; 
-
-                for (let n=0; n<orders.length; n++) {
-                    let order = orders[n]; 
-
-                    let status = order.status; 
-                    if (status.length > 24) 
-                        status = status.substring(0, 24); 
-
-                    if (!order.side) 
-                        order.side = ''; 
-
-                    let html = `<div class='console-row tooltip'>` + 
-                    `<span class='small-gold-text console-cell' style='width:150px'>${order.exchange}/${order.symbol}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:160px'>${status}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:50px'>${order.side}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:50px'>${order.type}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:50px'>${order.quantity}</span>` + 
-                    `<span class='small-green-text console-cell' style='width:100px'>${order.price}</span>` + 
-                    `<span class='tooltip-text'>${formatTooltipText(order)}<span>` + 
-                    `</div>`;
-                    $("#ordersContent").append(html); 
-                }
+            let rowHtml = `<span class='small-gold-text console-cell' style='width:300px'>${getMatchName(matchId)}</span>` + 
+                    `<span class='small-gold-text console-cell' style='width:160px'>${formatBetAmount(bet.amount)}</span>` + 
+                    `<span class='small-gold-text console-cell' style='width:100px'>${formatChosen(matchId, bet.chosenWinner)}</span>` +
+                    `<span class='small-gold-text console-cell' style='width:100px'>${formatBetResult(bet)}</span>` +
+                    `<span class='tooltip-text'>${formatTooltipText(bet)}<span>`;
+            
+            console.log($("#" + rowId));
+            if ($("#" + rowId).length) {
+                $("#" + rowId).html(rowHtml); 
+            } else {
+                $("#betsContent").append(`<div class='console-row tooltip' id='${rowId}'>${rowHtml}</div>`);
             }
-            */
-        });
+        }
     };
+
+    this.updateMatches = (matches) => {
+        _matches = matches; 
+    }; 
     
     this.render = () => {
         return exception.try(() => {

@@ -89,9 +89,53 @@ const getMatchDetails = (query) => {
             }
         });
     });
-}
+};
+
+const getBets = (query) => {
+    return new Promise((resolve, reject) => {
+        exception.try(() => {
+            contract.methods.getUserBets().call()
+            .then((data) => {
+                resolve(data); 
+            })
+            .catch((e) => {
+                reject(e);
+            });
+        }, {
+            onError: (e) => {
+                reject(e); 
+            }
+        });
+    });
+};
+
+const getBetDetails = (query) => {
+    return new Promise((resolve, reject) => {
+        exception.try(() => {
+            if (query.id) {
+                contract.methods.getUserBet(query.id).call()
+                .then((data) => {
+                    if (data)
+                        data.matchId = query.id; 
+                    resolve(data); 
+                })
+                .catch((e) => {
+                    reject(e);
+                });
+            } else {
+                resolve(null);
+            }
+        }, {
+            onError: (e) => {
+                reject(e); 
+            }
+        });
+    });
+};
 
 module.exports = {
     getMatches,
-    getMatchDetails
+    getMatchDetails, 
+    getBets,
+    getBetDetails
 }

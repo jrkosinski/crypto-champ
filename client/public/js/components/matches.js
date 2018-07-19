@@ -4,6 +4,7 @@
 function MatchesComponent(dataCoordinator) {
     const _this = this; 
     const _matches = {};
+    let _matchCount = 0; 
     let _showAll = false;
     const _months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; 
 
@@ -68,9 +69,13 @@ function MatchesComponent(dataCoordinator) {
         }
 
         return output; 
-    }
+    };
 
-    this.showAll = () => { return _showAll; }
+    this.getMatches = () => { return _matches; }; 
+
+    this.getMatchCount = () => { return _matchCount; }; 
+
+    this.showAll = () => { return _showAll; }; 
 
     /**
      * show/hide local progress spinner
@@ -97,6 +102,9 @@ function MatchesComponent(dataCoordinator) {
 
     this.addOrUpdate = (match) => {
         if (match) {
+            if (!_matches[match.id])
+                _matchCount++; 
+                
             _matches[match.id] = match; 
             let rowId = `div-match-${match.id}`;
 
@@ -112,7 +120,7 @@ function MatchesComponent(dataCoordinator) {
                 $("#matchesContent").append(`<div class='console-row tooltip' id='${rowId}'>${rowHtml}</div>`);
             }
         }
-    }
+    };
     
     this.render = () => {
         return exception.try(() => {

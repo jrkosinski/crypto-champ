@@ -22,6 +22,12 @@ function DataCoordinator() {
                         for (let n=0; n<data.length; n++) {
                             api.getMatchDetails(data[n], (match) => {
                                 layoutComponents.matches.addOrUpdate(match); 
+
+                                //update bets component with matches data 
+                                if (layoutComponents.matches.getMatchCount() == data.length) {
+                                    layoutComponents.bets.updateMatches(layoutComponents.matches.getMatches()); 
+                                    _this.refreshBets(); 
+                                }
                             });
                         }
                     }
@@ -33,22 +39,26 @@ function DataCoordinator() {
     /**
      * 
      */
-    this.refreshBets = (showAll) => {   
+    this.refreshBets = () => {   
         exception.try(() => {
             layoutComponents.bets.progress(true); 
 
-            /*
-            api.getOrders(showAll, (data, err) => {
-                layoutComponents.orders.progress(false); 
+            api.getUserBets((data, err) => {
+                layoutComponents.bets.progress(false); 
                 //TODO: handle error 
                 if (err) {
-
+                    
                 }
                 else {
-                    layoutComponents.orders.update({ data: { all: data }}); 
+                    if (data && data.length) {
+                        for (let n=0; n<data.length; n++) {
+                            api.getBetDetails(data[n], (match) => {
+                                layoutComponents.bets.addOrUpdate(match); 
+                            });
+                        }
+                    }
                 }
             }); 
-            */
         });
     };
 
@@ -57,7 +67,7 @@ function DataCoordinator() {
      */
     this.start = () => {
         _this.refreshMatches();
-        _this.refreshBets();
+        //_this.refreshBets();
 
         //setInterval(() => {
         //    _this.refreshMatches(layoutComponents.matches.showAll()); 
