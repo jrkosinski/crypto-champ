@@ -1,16 +1,16 @@
 pragma solidity ^0.4.17;
 
-import "./Ownable.sol";
+import "./Disableable.sol";
 import "./OracleInterface.sol";
 
 
 /// @title SportsBets
 /// @author John R. Kosinski
 /// @notice Takes bets and handles payouts for sporting matches 
-contract SportsBets is Ownable {
+contract SportsBets is Disableable {
 
     //boxing results oracle 
-    address internal boxingOracleAddr = 0x132e2c9f752992d6dc48ec3d101e721654bb0754;
+    address internal boxingOracleAddr = 0x132E2c9F752992D6Dc48EC3D101E721654bB0754;
     OracleInterface internal boxingOracle = OracleInterface(boxingOracleAddr); 
 
     //constants
@@ -31,18 +31,29 @@ contract SportsBets is Ownable {
     /// @notice determines whether or not the user has already bet on the given match
     /// @param _user address of a user
     /// @param _matchId id of a match 
+    /// @param _chosenWinner the index of the participant to bet on (to win)
     /// @return true if the given user has already placed a bet on the given match 
-    function _userHasBetOnMatch(address _user, bytes32 _matchId) private view returns (bool) {
+    function _betIsValid(address _user, bytes32 _matchId, uint8 _chosenWinner) private view returns (bool) {
+
+        //ensure that user hasn't already bet on match 
         bytes32[] storage userBets = userToBets[_user]; 
         if (userBets.length > 0) {
             for (uint n = 0; n < userBets.length; n++) {
                 if (userBets[n] == _matchId) {
-                    return true;
+                    //user has already bet on match 
+                    return false;
                 }
             }
         }
 
-        return false;
+        //ensure that bet is valid for the match 
+        //TODO: combine this with other validation so that match is only gotten once 
+        uint8 participantCount; 
+        (,,participantCount,,,) = boxingOracle.getMatch(_matchId);
+        if (_chosenWinner >= participantCount)
+            return false;
+
+        return true;
     }
 
     /// @notice determines whether or not bets may still be accepted for the given match
@@ -89,7 +100,7 @@ contract SportsBets is Ownable {
     function getMatch(bytes32 _matchId) public view returns (
         bytes32 id,
         string name, 
-        uint participantCount,
+        uint8 participantCount,
         uint date, 
         OracleInterface.MatchOutcome outcome, 
         int8 winner) { 
@@ -131,27 +142,27 @@ contract SportsBets is Ownable {
 
     /// @notice places a non-rescindable bet on the given match 
     /// @param _matchId the id of the match on which to bet 
-    /// @param _amount the amount (in wei) to bet 
     /// @param _chosenWinner the index of the participant chosen as winner
-    function placeBet(bytes32 _matchId, uint _amount, uint8 _chosenWinner) public payable {
+    function placeBet(bytes32 _matchId, uint8 _chosenWinner) public payable notDisabled {
 
         //bet must be above a certain minimum 
-        require(_amount >= minimumBet);
+        require(msg.value >= minimumBet);
 
         //make sure that match exists 
         require(boxingOracle.matchExists(_matchId)); 
 
-        //TODO: require that chosen winner falls within the defined number of participants for match
-
-        //user should not have already placed bet (can't change bet after placing) 
-        //require(!_userHasBetOnMatch(msg.sender, _matchId)); 
+        //require that chosen winner falls within the defined number of participants for match
+        require(_betIsValid(msg.sender, _matchId, _chosenWinner));
 
         //match must still be open for betting
         require(_matchOpenForBetting(_matchId)); 
 
+        //transfer the money into the account 
+        address(this).transfer(msg.value);
+
         //add the new bet 
         Bet[] storage bets = matchToBets[_matchId]; 
-        bets.push(Bet(msg.sender, _matchId, _amount, _chosenWinner))-1; 
+        bets.push(Bet(msg.sender, _matchId, msg.value, _chosenWinner))-1; 
 
         //add the mapping
         bytes32[] storage userBets = userToBets[msg.sender]; 

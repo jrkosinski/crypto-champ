@@ -1,10 +1,6 @@
 pragma solidity ^0.4.16;
 
 library DateLib {
-    /*
-     *  Date and Time utilities for ethereum contracts
-     *
-     */
     struct DateTime {
         uint16 year;
         uint8 month;

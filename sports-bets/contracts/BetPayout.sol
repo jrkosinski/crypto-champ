@@ -105,7 +105,7 @@ contract BetPayout is SportsBets {
     /// @notice check the outcome of the given match; if ready, will trigger calculation of payout, and actual payout to winners
     /// @param _matchId the id of the match to check
     /// @return the outcome of the given match 
-    function checkOutcome(bytes32 _matchId) public returns (OracleInterface.MatchOutcome)  {
+    function checkOutcome(bytes32 _matchId) public notDisabled returns (OracleInterface.MatchOutcome)  {
         OracleInterface.MatchOutcome outcome; 
         int8 winner = -1;
 

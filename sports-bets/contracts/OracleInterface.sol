@@ -18,7 +18,7 @@ contract OracleInterface {
     function getMatch(bytes32 _matchId) public view returns (
         bytes32 id,
         string _name, 
-        uint participantCount,
+        uint8 participantCount,
         uint _date, 
         MatchOutcome _outcome, 
         int8 winner);
