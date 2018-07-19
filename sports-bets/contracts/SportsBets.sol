@@ -10,7 +10,7 @@ import "./OracleInterface.sol";
 contract SportsBets is Ownable {
 
     //boxing results oracle 
-    address internal boxingOracleAddr = 0x9f91e4df7554ED7c032172b26979749cb608d10c;
+    address internal boxingOracleAddr = 0x132e2c9f752992d6dc48ec3d101e721654bb0754;
     OracleInterface internal boxingOracle = OracleInterface(boxingOracleAddr); 
 
     //constants
@@ -110,6 +110,25 @@ contract SportsBets is Ownable {
         return boxingOracle.getMostRecentMatch(true); 
     }
 
+    /// @notice gets the current matches on which the user has bet 
+    /// @return array of match ids 
+    function getUserBets() public view returns (bytes32[]) {
+        return userToBets[msg.sender];
+    }
+
+    /// @notice gets a user's bet on a given match 
+    /// @param _matchId the id of the desired match 
+    /// @return tuple containing the bet amount, and the index of the chosen winner (or (0,0) if no bet found)
+    function getUserBet(bytes32 _matchId) public view returns (uint amount, uint8 winner) { 
+        Bet[] storage bets = matchToBets[_matchId]; 
+        for (uint n = 0; n < bets.length; n++) {
+            if (bets[n].user == msg.sender) {
+                return (bets[n].amount, bets[n].chosenWinner);
+            }
+        }
+        return (0, 0); 
+    }
+
     /// @notice places a non-rescindable bet on the given match 
     /// @param _matchId the id of the match on which to bet 
     /// @param _amount the amount (in wei) to bet 
@@ -143,18 +162,5 @@ contract SportsBets is Ownable {
     /// @return true if valid connection 
     function testOracleConnection() public view returns(bool) {
         return boxingOracle.testConnection();
-    }
-
-    function addTestData() external onlyOwner {
-        bytes32 id; 
-        boxingOracle.addTestData();
-
-        (id,,,,,) = getMostRecentMatch();
-
-        placeBet(id, uint(0.001 ether), 1); 
-        placeBet(id, uint(10000 ether), 0); 
-        placeBet(id, uint(101 ether), 1); 
-        placeBet(id, uint(3 ether), 1); 
-        placeBet(id, uint(99 ether), 0); 
     }
 }

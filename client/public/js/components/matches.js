@@ -89,7 +89,6 @@ function MatchesComponent(dataCoordinator) {
         _this.toolbar.setMenuItemText(0, menuItemText); 
     };
 
-
     this.addOrUpdate = (match) => {
         if (match) {
             _matches[match.id] = match; 

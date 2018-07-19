@@ -1,6 +1,7 @@
 pragma solidity ^0.4.17;
 
 import "./Ownable.sol";
+import "./DateLib.sol";
 
 /*
 TEST: 
@@ -36,6 +37,18 @@ TEST:
 contract BoxingOracle is Ownable {
     Match[] matches; 
     mapping(bytes32 => uint) matchIdToIndex; 
+
+    struct DateTime {
+        uint16 year;
+        uint8 month;
+        uint8 day;
+        uint8 hour;
+        uint8 minute;
+        uint8 second;
+        uint8 ms;
+        uint8 weekday;
+    }
+    using DateLib for DateLib.DateTime;
 
     //defines a match along with its outcome
     struct Match {
@@ -220,9 +233,14 @@ contract BoxingOracle is Ownable {
 
     /// @notice for testing 
     function addTestData() external onlyOwner {
-        uint date = now;
-        addMatch("m1", 2, date);
-        addMatch("m2", 2, date);
-        addMatch("m3", 2, date);
+        addMatch("Pacquiao vs. MayWeather", 2, DateLib.DateTime(2018, 8, 13, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Macquiao vs. Payweather", 2, DateLib.DateTime(2018, 8, 15, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Pacweather vs. Macarthur", 2, DateLib.DateTime(2018, 9, 3, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Macarthur vs. Truman", 2, DateLib.DateTime(2018, 9, 3, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Macaque vs. Pregunto", 2, DateLib.DateTime(2018, 9, 21, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Farsworth vs. Wernstrom", 2, DateLib.DateTime(2018, 9, 29, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Fortinbras vs. Hamlet", 2, DateLib.DateTime(2018, 10, 10, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Foolicle vs. Pretendo", 2, DateLib.DateTime(2018, 11, 11, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Parthian vs. Scythian", 2, DateLib.DateTime(2018, 11, 12, 0, 0, 0, 0, 0).toUnixTimestamp());
     }
 }
