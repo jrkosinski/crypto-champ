@@ -17,18 +17,20 @@ contract OracleInterface {
 
     function getMatch(bytes32 _matchId) public view returns (
         bytes32 id,
-        string _name, 
+        string name, 
+        string participants,
         uint8 participantCount,
-        uint _date, 
-        MatchOutcome _outcome, 
+        uint date, 
+        MatchOutcome outcome, 
         int8 winner);
 
     function getMostRecentMatch(bool _pending) public view returns (
         bytes32 id,
-        string _name, 
+        string name, 
+        string participants,
         uint participantCount,
-        uint _date, 
-        MatchOutcome _outcome, 
+        uint date, 
+        MatchOutcome outcome, 
         int8 winner);
 
     function testConnection() public pure returns (bool);

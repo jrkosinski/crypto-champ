@@ -10,7 +10,7 @@ import "./OracleInterface.sol";
 contract SportsBets is Disableable {
 
     //boxing results oracle 
-    address internal boxingOracleAddr = 0xeBf3C3b116fC39b05a4B6E24aCB3C7c5e604d07B;
+    address internal boxingOracleAddr = 0x20df41308f8F48fC38f22beb42306f2C98D0d00c;
     OracleInterface internal boxingOracle = OracleInterface(boxingOracleAddr); 
 
     //constants
@@ -49,7 +49,7 @@ contract SportsBets is Disableable {
         //ensure that bet is valid for the match 
         //TODO: combine this with other validation so that match is only gotten once 
         uint8 participantCount; 
-        (,,participantCount,,,) = boxingOracle.getMatch(_matchId);
+        (,,,participantCount,,,) = boxingOracle.getMatch(_matchId);
         if (_chosenWinner >= participantCount)
             return false;
 
@@ -61,7 +61,7 @@ contract SportsBets is Disableable {
     /// @return true if the match is bettable 
     function _matchOpenForBetting(bytes32 _matchId) private view returns (bool) {
         OracleInterface.MatchOutcome outcome; 
-        (,,,,outcome,) = getMatch(_matchId);
+        (,,,,,outcome,) = getMatch(_matchId);
         return outcome == OracleInterface.MatchOutcome.Pending;
     }
 
@@ -100,6 +100,7 @@ contract SportsBets is Disableable {
     function getMatch(bytes32 _matchId) public view returns (
         bytes32 id,
         string name, 
+        string participants,
         uint8 participantCount,
         uint date, 
         OracleInterface.MatchOutcome outcome, 
@@ -113,6 +114,7 @@ contract SportsBets is Disableable {
     function getMostRecentMatch() public view returns (
         bytes32 id,
         string name, 
+        string participants,
         uint participantCount, 
         uint date, 
         OracleInterface.MatchOutcome outcome, 

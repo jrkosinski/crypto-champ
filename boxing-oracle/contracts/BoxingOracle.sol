@@ -38,22 +38,14 @@ contract BoxingOracle is Ownable {
     Match[] matches; 
     mapping(bytes32 => uint) matchIdToIndex; 
 
-    struct DateTime {
-        uint16 year;
-        uint8 month;
-        uint8 day;
-        uint8 hour;
-        uint8 minute;
-        uint8 second;
-        uint8 ms;
-        uint8 weekday;
-    }
     using DateLib for DateLib.DateTime;
+
 
     //defines a match along with its outcome
     struct Match {
         bytes32 id;
         string name;
+        string participants;
         uint8 participantCount;
         uint date; 
         MatchOutcome outcome;
@@ -77,6 +69,7 @@ contract BoxingOracle is Ownable {
         return matchIdToIndex[_matchId]-1; 
     }
 
+
     /// @notice determines whether a match exists with the given id 
     /// @param _matchId the match id to test
     /// @return true if match exists and id is valid
@@ -89,10 +82,12 @@ contract BoxingOracle is Ownable {
 
     /// @notice puts a new pending match into the blockchain 
     /// @param _name descriptive name for the match (e.g. Pac vs. Mayweather 2016)
-    /// @param _participantCount the number of participants in the match 
+    /// @param _participants |-delimited string of participants names (e.g. "Manny Pac|Floyd May")
+    /// @param _participantCount number of participants 
     /// @param _date date set for the match 
     /// @return the unique id of the newly created match 
-    function addMatch(string _name, uint8 _participantCount, uint _date) onlyOwner public returns (bytes32) {
+    function addMatch(string _name, string _participants, uint8 _participantCount, uint _date) onlyOwner public returns (bytes32) {
+
         //hash the crucial info to get a unique id 
         bytes32 id = keccak256(abi.encodePacked(_name, _participantCount, _date)); 
 
@@ -100,7 +95,7 @@ contract BoxingOracle is Ownable {
         require(!matchExists(id));
         
         //add the match 
-        uint newIndex = matches.push(Match(id, _name, _participantCount, _date, MatchOutcome.Pending, -1))-1; 
+        uint newIndex = matches.push(Match(id, _name, _participants, _participantCount, _date, MatchOutcome.Pending, -1))-1; 
         matchIdToIndex[id] = newIndex+1;
         
         //return the unique id of the new match
@@ -177,6 +172,7 @@ contract BoxingOracle is Ownable {
     function getMatch(bytes32 _matchId) public view returns (
         bytes32 id,
         string name, 
+        string participants,
         uint8 participantCount,
         uint date, 
         MatchOutcome outcome, 
@@ -185,10 +181,10 @@ contract BoxingOracle is Ownable {
         //get the match 
         if (matchExists(_matchId)) {
             Match storage theMatch = matches[_getMatchIndex(_matchId)];
-            return (theMatch.id, theMatch.name, theMatch.participantCount, theMatch.date, theMatch.outcome, theMatch.winner); 
+            return (theMatch.id, theMatch.name, theMatch.participants, theMatch.participantCount, theMatch.date, theMatch.outcome, theMatch.winner); 
         }
         else {
-            return (_matchId, "", 0, 0, MatchOutcome.Pending, -1); 
+            return (_matchId, "", "", 0, 0, MatchOutcome.Pending, -1); 
         }
     }
 
@@ -198,6 +194,7 @@ contract BoxingOracle is Ownable {
     function getMostRecentMatch(bool _pending) public view returns (
         bytes32 id,
         string name, 
+        string participants,
         uint8 participantCount,
         uint date, 
         MatchOutcome outcome, 
@@ -233,14 +230,14 @@ contract BoxingOracle is Ownable {
 
     /// @notice for testing 
     function addTestData() external onlyOwner {
-        addMatch("Pacquiao vs. MayWeather", 2, DateLib.DateTime(2018, 8, 13, 0, 0, 0, 0, 0).toUnixTimestamp());
-        addMatch("Macquiao vs. Payweather", 2, DateLib.DateTime(2018, 8, 15, 0, 0, 0, 0, 0).toUnixTimestamp());
-        addMatch("Pacweather vs. Macarthur", 2, DateLib.DateTime(2018, 9, 3, 0, 0, 0, 0, 0).toUnixTimestamp());
-        addMatch("Macarthur vs. Truman", 2, DateLib.DateTime(2018, 9, 3, 0, 0, 0, 0, 0).toUnixTimestamp());
-        addMatch("Macaque vs. Pregunto", 2, DateLib.DateTime(2018, 9, 21, 0, 0, 0, 0, 0).toUnixTimestamp());
-        addMatch("Farsworth vs. Wernstrom", 2, DateLib.DateTime(2018, 9, 29, 0, 0, 0, 0, 0).toUnixTimestamp());
-        addMatch("Fortinbras vs. Hamlet", 2, DateLib.DateTime(2018, 10, 10, 0, 0, 0, 0, 0).toUnixTimestamp());
-        addMatch("Foolicle vs. Pretendo", 2, DateLib.DateTime(2018, 11, 11, 0, 0, 0, 0, 0).toUnixTimestamp());
-        addMatch("Parthian vs. Scythian", 2, DateLib.DateTime(2018, 11, 12, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Pacquiao vs. MayWeather", "Pacquiao|Mayweather", 2, DateLib.DateTime(2018, 8, 13, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Macquiao vs. Payweather", "Macquiao|Payweather", 2, DateLib.DateTime(2018, 8, 15, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Pacweather vs. Macarthur", "Pacweather|Macarthur", 2, DateLib.DateTime(2018, 9, 3, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Macarthur vs. Truman", "Macarthur|Truman", 2, DateLib.DateTime(2018, 9, 3, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Macaque vs. Pregunto", "Macaque|Pregunto", 2, DateLib.DateTime(2018, 9, 21, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Farsworth vs. Wernstrom", "Farsworth|Wernstrom", 2, DateLib.DateTime(2018, 9, 29, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Fortinbras vs. Hamlet", "Fortinbras|Hamlet", 2, DateLib.DateTime(2018, 10, 10, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Foolicle vs. Pretendo", "Foolicle|Pretendo", 2, DateLib.DateTime(2018, 11, 11, 0, 0, 0, 0, 0).toUnixTimestamp());
+        addMatch("Parthian vs. Scythian", "Parthian|Scythian", 2, DateLib.DateTime(2018, 11, 12, 0, 0, 0, 0, 0).toUnixTimestamp());
     }
 }

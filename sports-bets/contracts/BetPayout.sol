@@ -109,7 +109,7 @@ contract BetPayout is SportsBets {
         OracleInterface.MatchOutcome outcome; 
         int8 winner = -1;
 
-        (,,,,outcome,winner) = boxingOracle.getMatch(_matchId); 
+        (,,,,,outcome,winner) = boxingOracle.getMatch(_matchId); 
 
         if (outcome == OracleInterface.MatchOutcome.Decided) {
             if (!matchPaidOut[_matchId]) {
