@@ -20,8 +20,14 @@ function MatchesComponent(dataCoordinator) {
 
             let output = `${match.id}<br/><br/>` + 
             `${match.name} ${formatMatchDate(match.date)}<br/><br/>` + 
-            `${match.participantCount} participants:<br/><br/>` + 
-            `${formatMatchOutcome(match.outcome)}`; 
+            `${match.participantCount} participants:<br/><br/>`; 
+            if (match.participants) {
+                const partArray = match.participants.split('|'); 
+                for (let n=0; n<partArray.length; n++) {
+                    output += ` -  ${partArray[n]}<br/><br/>`; 
+                }
+            }
+            output += `${formatMatchOutcome(match.outcome)}`; 
 
 
             return output; 

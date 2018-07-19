@@ -7,6 +7,10 @@ const api = require('./api/api');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
 
+//TODO: fix dates issue 
+//TODO: sort by dates
+//TODO: display participants 
+
 function run (){
     var sendFile = (res, filename) => {
         exception.try(() => {

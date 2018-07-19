@@ -1,5 +1,4 @@
 
-//TODO: move to stringUtil
 String.prototype.padRight = function(totalLen, paddingChar) {
 	var target = this;
     if (!paddingChar)

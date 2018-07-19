@@ -3,9 +3,6 @@ pragma solidity ^0.4.17;
 import "./BetPayout.sol";
 
 
-//TODO: add participant names 
-//TODO: add function to get current pending bets & completed bets
-
 /*
 PROBLEMS 
 - owner is free to change out oracle at any time 

@@ -10,7 +10,7 @@ import "./OracleInterface.sol";
 contract SportsBets is Disableable {
 
     //boxing results oracle 
-    address internal boxingOracleAddr = 0x20df41308f8F48fC38f22beb42306f2C98D0d00c;
+    address internal boxingOracleAddr = 0xaFc1b462a0a58c981aed284FD906b025263E11Fe;
     OracleInterface internal boxingOracle = OracleInterface(boxingOracleAddr); 
 
     //constants
