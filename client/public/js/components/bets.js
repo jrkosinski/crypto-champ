@@ -9,10 +9,6 @@ function BetsComponent(dataCoordinator) {
 
     ComponentBase.call(this, dataCoordinator);
 
-    /**
-     * 
-     * @param {*} trade 
-     */
     const formatTooltipText = (bet) => {  
         return exception.try(() => {
             //let output = `<span class='small-green-text console-cell' style='width:130px'>${order.orderId}</span>` + 
@@ -94,10 +90,6 @@ function BetsComponent(dataCoordinator) {
 
     this.showAll = () => { return _showAll; }
 
-    /**
-     * show/hide local progress spinner
-     * @param {*} show 
-     */
     this.progress = (show) => {
         if (show)
             $("#betsProgress").css('display', 'block');
@@ -105,9 +97,6 @@ function BetsComponent(dataCoordinator) {
             $("#betsProgress").css('display', 'none');
     };
 
-    /**
-     * 
-     */
     this.toggleShowAll = () => {
         _showAll = !_showAll;
         //_this.dataCoordinator.refreshOrders(_showAll); 

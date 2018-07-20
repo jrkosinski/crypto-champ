@@ -6,10 +6,6 @@ function PnlComponent(dataCoordinator) {
 
     ComponentBase.call(this, dataCoordinator);
 
-    /**
-     * show/hide local progress spinner
-     * @param {*} show 
-     */
     this.progress = (show) => {
         if (show)
             $("#pnlProgress").css('display', 'block');

@@ -4,9 +4,6 @@ let _alertOverlayHandle = null;
 function DataCoordinator() {
     const _this = this; 
     
-    /**
-     * 
-     */
     this.refreshMatches = (showAll) => {   
         exception.try(() => {
             layoutComponents.matches.progress(true); 
@@ -36,9 +33,6 @@ function DataCoordinator() {
         });
     };
     
-    /**
-     * 
-     */
     this.refreshBets = () => {   
         exception.try(() => {
             layoutComponents.bets.progress(true); 
