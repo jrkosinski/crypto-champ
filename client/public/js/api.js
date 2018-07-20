@@ -13,7 +13,7 @@ function execApiCall (url, method, data, callback) {
             
         },
         success: function (result) {
-            console.log(result);
+            //console.log(result);
             callback(result, null);
         },
         error: function (err) {

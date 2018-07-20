@@ -52,8 +52,8 @@ function DataCoordinator() {
                 else {
                     if (data && data.length) {
                         for (let n=0; n<data.length; n++) {
-                            api.getBetDetails(data[n], (match) => {
-                                layoutComponents.bets.addOrUpdate(match); 
+                            api.getBetDetails(data[n], (bet) => {
+                                layoutComponents.bets.addOrUpdate(bet); 
                             });
                         }
                     }

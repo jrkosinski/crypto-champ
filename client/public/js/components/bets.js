@@ -32,12 +32,16 @@ function BetsComponent(dataCoordinator) {
 
         //TODO: convert for local timezone
         const date = new Date(timestamp * 1000); 
-        output = `${_months[(date.getMonth())]} ${date.getDay()}`;
+        output = `${_months[(date.getMonth())]} ${date.getDay()+1}`;
 
         if (date.getFullYear != new Date().getFullYear())
             output += ', ' + date.getFullYear(); 
 
         return output; 
+    };
+
+    const formatBetAmount = (amount) => {
+        return (amount/10e18).toString();
     };
 
     const formatMatchResult = (bet, matchId) => {
@@ -56,7 +60,7 @@ function BetsComponent(dataCoordinator) {
                     output = 'DRAW';
                     break;
                 case 3: 
-                    output = (bet.chosenWinner == match.winner) ? "WIN" : "LOSS";
+                    output = (bet.winner == match.winner) ? "WIN" : "LOSS";
                     break;
             }
         }
@@ -114,18 +118,17 @@ function BetsComponent(dataCoordinator) {
     };
 
     this.addOrUpdate = (bet) => {
-        if (match) {
+        if (bet) {
             _bets[bet.matchId] = bet; 
             const matchId = bet.matchId;
             let rowId = `div-bet-${matchId}`;
 
             let rowHtml = `<span class='small-gold-text console-cell' style='width:100px'>${formatBetAmount(bet.amount)}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:160px'>on ${getParticipantName(matchId, bet.chosenWinner)}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:100px'>in ${formatMatchDescription(matchId)}</span>` +
+                    `<span class='small-gold-text console-cell' style='width:160px'>on ${getParticipantName(matchId, bet.winner)}</span>` + 
+                    `<span class='small-gold-text console-cell' style='width:400px'>in ${formatMatchDescription(matchId)}</span>` +
                     `<span class='small-gold-text console-cell' style='width:100px'>${formatMatchResult(bet, matchId)}</span>` +
-                    `<span class='tooltip-text'>${formatTooltipText(bet)}<span>`;
+                    ''; //`<span class='tooltip-text'>${formatTooltipText(bet)}<span>`;
             
-            console.log($("#" + rowId));
             if ($("#" + rowId).length) {
                 $("#" + rowId).html(rowHtml); 
             } else {

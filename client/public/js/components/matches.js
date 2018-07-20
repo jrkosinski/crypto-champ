@@ -40,7 +40,7 @@ function MatchesComponent(dataCoordinator) {
 
         //TODO: convert for local timezone
         const date = new Date(timestamp * 1000); 
-        output = `${_months[(date.getMonth())]} ${date.getDay()}`;
+        output = `${_months[(date.getMonth())]} ${date.getDay()+1}`;
 
         if (date.getFullYear != new Date().getFullYear())
             output += ', ' + date.getFullYear(); 
@@ -104,7 +104,7 @@ function MatchesComponent(dataCoordinator) {
         if (match) {
             if (!_matches[match.id])
                 _matchCount++; 
-                
+
             _matches[match.id] = match; 
             let rowId = `div-match-${match.id}`;
 
@@ -113,7 +113,6 @@ function MatchesComponent(dataCoordinator) {
                     `<span class='small-gold-text console-cell' style='width:100px'>${formatMatchOutcome(match.outcome)}</span>` +
                     `<span class='tooltip-text'>${formatTooltipText(match)}<span>`;
             
-            console.log($("#" + rowId));
             if ($("#" + rowId).length) {
                 $("#" + rowId).html(rowHtml); 
             } else {
