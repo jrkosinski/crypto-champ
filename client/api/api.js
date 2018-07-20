@@ -56,7 +56,7 @@ const callMethod = async((method) => {
 const getMatches = (query) => {
     return new Promise((resolve, reject) => {
         exception.try(() => {
-            let f = contract.methods.getBettableMatches(); 
+            let f = contract.methods.getMatches(); 
             if (query.pendingOnly) {
                 f = contract.methods.getBettableMatches(); 
             }

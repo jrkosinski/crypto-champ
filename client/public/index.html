@@ -43,7 +43,7 @@
             <br/><br/>
         </div>
 
-        <div id="makeBetModal" class="modal">
+        <div id="placeBetModal" class="modal">
 
             <!-- Modal content -->
             <div class="modal-content">
@@ -52,6 +52,18 @@
                     
                 </div>
                  <div class="modal-body" style='padding-bottom:50px'>
+                     <input type="hidden" id="betMatchId"/> 
+                     <div>
+                        <span class="large-green-text" style="width:200px">amount (in ether): </span>
+                        <span style="width:500px"><input id="betAmountText" class="texfield" /></span> 
+                     </div>
+                     <div>
+                        <span class="large-green-text" style="width:200px">participant: </span>
+                        <span style="width:500px"><input id="participantText" class="texfield" /></span> 
+                     </div>
+                     <div>
+                        <input type="button" id="placeBetButton" value="place bet" />  <br/><br/> 
+                     </div>
                 </div>
                 <div class="modal-footer">
                 </div>

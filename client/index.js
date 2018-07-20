@@ -11,9 +11,8 @@ const api = require('./api/api');
 
 app.use(bodyParser.json()); 
 
-//TODO: fix dates issue 
 //TODO: sort by dates
-//TODO: display participants 
+//TODO: different colors for win/loss
 
 function run (){
     var sendFile = (res, filename) => {

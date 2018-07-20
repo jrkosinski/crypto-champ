@@ -48,11 +48,13 @@ body {
     padding: 0; }
   
   a {
-    font-family: 'robotoRegular';
-    font-size: 16px;
-    color: #f0c55e;
+    font-family: 'courier';
+    font-size: 12px;
+    color: blue;
     text-decoration: none;
     font-weight: normal;
+    text-decoration: underline;
+    cursor:hand;
     transition: all .5s; }
   
   p {

@@ -1,5 +1,16 @@
 'use strict'; 
 
+let _modal = null; 
+
+function openPlaceBetModal(matchId) {
+    $("#participantText").val(""); 
+    $("#betAmountText").val(""); 
+    $("#betMatchId").val(matchId); 
+
+    _modal = new Modal("placeBetModal"); 
+    _modal.open(); 
+}
+
 
 function MatchesComponent(dataCoordinator) {
     const _this = this; 
@@ -24,7 +35,7 @@ function MatchesComponent(dataCoordinator) {
                     output += ` -  ${partArray[n]}<br/><br/>`; 
                 }
             }
-            output += `${formatMatchOutcome(match.outcome)}`; 
+            output += `${formatMatchOutcome(match.id, match.outcome, true)}`; 
 
 
             return output; 
@@ -44,12 +55,25 @@ function MatchesComponent(dataCoordinator) {
         return output; 
     };
 
-    const formatMatchOutcome = (outcome) => {
+    const userHasBet = (matchId) => {
+        if (dataCoordinator && dataCoordinator.components.bets) 
+            return dataCoordinator.components.bets.userHasBet(matchId); 
+        return false;
+    };
+
+    const formatMatchOutcome = (matchId, outcome, forTooltip) => {
         let output = 'unknown'; 
 
         switch(parseInt(outcome)) {
             case 0: 
-            output = 'pending';
+                if (forTooltip) {
+                    output = "pending"; 
+                } else {
+                    output = forTooltip ? "pending" : `<a href="#" onClick="openPlaceBetModal('${matchId}')">place bet</a>`;
+                }
+                if (userHasBet(matchId))
+                    output = "BET PLACED"; 
+
                 break;
             case 1: 
                 output = 'underway';
@@ -66,6 +90,14 @@ function MatchesComponent(dataCoordinator) {
 
         return output; 
     };
+
+    const formatRowHtml = (match) => {
+        return `<span class='small-gold-text console-cell' style='width:300px'>${match.name}</span>` + 
+        `<span class='small-gold-text console-cell' style='width:160px'>${formatMatchDate(match.date)}</span>` + 
+        `<span class='small-gold-text console-cell' style='width:100px'>${formatMatchOutcome(match.id, match.outcome)}</span>` +
+        ''; //`<span class='tooltip-text'>${formatTooltipText(match)}<span>`;
+    }; 
+
 
     this.getMatches = () => { return _matches; }; 
 
@@ -97,10 +129,7 @@ function MatchesComponent(dataCoordinator) {
             _matches[match.id] = match; 
             let rowId = `div-match-${match.id}`;
 
-            let rowHtml = `<span class='small-gold-text console-cell' style='width:300px'>${match.name}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:160px'>${formatMatchDate(match.date)}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:100px'>${formatMatchOutcome(match.outcome)}</span>` +
-                    `<span class='tooltip-text'>${formatTooltipText(match)}<span>`;
+            let rowHtml = formatRowHtml(match);
             
             if ($("#" + rowId).length) {
                 $("#" + rowId).html(rowHtml); 
@@ -136,5 +165,15 @@ function MatchesComponent(dataCoordinator) {
                 "<div id='matchesContent'></div></div>");
         });
     };
+
+    this.updateBetStatus = (matchId, hasBet) => {
+        if (hasBet) {
+            let rowId = `div-match-${matchId}`;
+
+            if ($("#" + rowId).length) {
+                $("#" + rowId).html(formatRowHtml(_matches[matchId])); 
+            }
+        }
+    }; 
 }
 

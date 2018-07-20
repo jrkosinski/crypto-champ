@@ -88,6 +88,7 @@ function BetsComponent(dataCoordinator) {
         return output; 
     }; 
 
+
     this.showAll = () => { return _showAll; }
 
     this.progress = (show) => {
@@ -123,6 +124,8 @@ function BetsComponent(dataCoordinator) {
             } else {
                 $("#betsContent").append(`<div class='console-row tooltip' id='${rowId}'>${rowHtml}</div>`);
             }
+
+            dataCoordinator.components.matches.updateBetStatus(matchId, _this.userHasBet(matchId)); 
         }
     };
 
@@ -156,5 +159,9 @@ function BetsComponent(dataCoordinator) {
                 "<div id='betsContent'></div></div>");
         });
     };
+
+    this.userHasBet = (matchId) => {
+        return (_bets[matchId] ? true : false); 
+    }; 
 }
 

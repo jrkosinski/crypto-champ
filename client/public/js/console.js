@@ -1,15 +1,16 @@
 
 let _alertOverlayHandle = null;
 
+
 function DataCoordinator() {
-    const _this = this; 
+    const _this = this;     
     
     this.refreshMatches = (showAll) => {   
         exception.try(() => {
-            layoutComponents.matches.progress(true); 
+            _this.components.matches.progress(true); 
 
-            api.getMatches(!showAll, (data, err) => {
-                layoutComponents.matches.progress(false); 
+            api.getMatches(false, (data, err) => {
+                _this.components.matches.progress(false); 
                 //TODO: handle error 
                 if (err) {
                     
@@ -18,11 +19,11 @@ function DataCoordinator() {
                     if (data && data.length) {
                         for (let n=0; n<data.length; n++) {
                             api.getMatchDetails(data[n], (match) => {
-                                layoutComponents.matches.addOrUpdate(match); 
+                                _this.components.matches.addOrUpdate(match); 
 
                                 //update bets component with matches data 
-                                if (layoutComponents.matches.getMatchCount() == data.length) {
-                                    layoutComponents.bets.updateMatches(layoutComponents.matches.getMatches()); 
+                                if (_this.components.matches.getMatchCount() == data.length) {
+                                    _this.components.bets.updateMatches(_this.components.matches.getMatches()); 
                                     _this.refreshBets(); 
                                 }
                             });
@@ -35,10 +36,10 @@ function DataCoordinator() {
     
     this.refreshBets = () => {   
         exception.try(() => {
-            layoutComponents.bets.progress(true); 
+            _this.components.bets.progress(true); 
 
             api.getUserBets((data, err) => {
-                layoutComponents.bets.progress(false); 
+                _this.components.bets.progress(false); 
                 //TODO: handle error 
                 if (err) {
                     
@@ -47,7 +48,7 @@ function DataCoordinator() {
                     if (data && data.length) {
                         for (let n=0; n<data.length; n++) {
                             api.getBetDetails(data[n], (bet) => {
-                                layoutComponents.bets.addOrUpdate(bet); 
+                                _this.components.bets.addOrUpdate(bet); 
                             });
                         }
                     }
@@ -58,13 +59,14 @@ function DataCoordinator() {
 
     this.start = () => {
         _this.refreshMatches();
-        //_this.refreshBets();
-
-        //setInterval(() => {
-        //    _this.refreshMatches(layoutComponents.matches.showAll()); 
-        //    _this.refreshBets(layoutComponents.bets.showAll()); 
-        //}, 60000); 
     }; 
+
+    //layout components collection
+    this.components = {
+        matches: new MatchesComponent(_this),
+        bets: new BetsComponent(_this),
+        pnl: new PnlComponent(_this)
+    };
 }
 
 function showMainScreen() {
@@ -74,7 +76,7 @@ function showMainScreen() {
 
     const registerComponent = (componentName) => {
         layout.registerComponent(componentName, function (container, componentState) {
-            const component = layoutComponents[componentName]; 
+            const component = _dataCoordinator.components[componentName]; 
             component.container = container.getElement();
             container.getElement().html(component.render());
     
@@ -99,8 +101,19 @@ function showMainScreen() {
     
     layout.init();
 
-    //TODO: still need this? 
-    //$("#mainTopDiv").html(layoutComponents.tarsState.render()); 
+    $("#placeBetButton").click(() => {
+        const etherValue = parseFloat($("#betAmountText").val()); 
+        const winnerIndex = parseInt($("#participantText").val()); 
+        const matchId = ($("#betMatchId").val()); 
+
+        api.placeBet(matchId, etherValue, winnerIndex, (data, err) => {
+            if (err) {
+                
+            } else {
+                _dataCoordinator.refreshBets(); 
+            }
+        });
+    });
 }
 
 function showAlertOverlay(text) {
@@ -158,12 +171,6 @@ const layoutConfig = {
     ]
 };
 
-//layout components collection
-const layoutComponents = {
-    matches: new MatchesComponent(_dataCoordinator),
-    bets: new BetsComponent(_dataCoordinator),
-    pnl: new PnlComponent(_dataCoordinator)
-};
 
 $(document).ready(() => {
 
