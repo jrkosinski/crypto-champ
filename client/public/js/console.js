@@ -62,9 +62,6 @@ function DataCoordinator() {
         });
     };
 
-    /**
-     * start everything running/listening 
-     */
     this.start = () => {
         _this.refreshMatches();
         //_this.refreshBets();

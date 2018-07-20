@@ -39,9 +39,19 @@ function getMatchDetails(matchId, callback) {
     execApiCall(config.apiUrl + '/matches?id=' + matchId, 'GET', {}, callback);
 }
 
+function getUserBets(callback) {
+    execApiCall(config.apiUrl + '/bets', 'GET', {}, callback);
+}
+
+function getBetDetails(matchId, callback) {
+    execApiCall(config.apiUrl + '/bets?id=' + matchId, 'GET', {}, callback);
+}
+
 $(document).ready(function () {
     window.api = {
         getMatches,
-        getMatchDetails
+        getMatchDetails,
+        getUserBets,
+        getBetDetails 
     };
 }); 

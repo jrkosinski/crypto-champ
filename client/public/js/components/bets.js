@@ -40,28 +40,53 @@ function BetsComponent(dataCoordinator) {
         return output; 
     };
 
-    const formatMatchOutcome = (outcome) => {
+    const formatMatchResult = (bet, matchId) => {
         let output = 'unknown'; 
-
-        switch(parseInt(outcome)) {
-            case 0: 
-            output = 'pending';
-                break;
-            case 1: 
-                output = 'underway';
-                break;
-            case 2: 
-                output = 'draw';
-                break;
-            case 3: 
-                output = 'decided';
-                break;
-            default:
-                output= outcome;
+        const match = _matches[matchId]; 
+        
+        if (match) {
+            switch(parseInt(match.outcome)) {
+                case 0: 
+                output = 'pending';
+                    break;
+                case 1: 
+                    output = 'underway';
+                    break;
+                case 2: 
+                    output = 'DRAW';
+                    break;
+                case 3: 
+                    output = (bet.chosenWinner == match.winner) ? "WIN" : "LOSS";
+                    break;
+            }
         }
 
         return output; 
     };
+
+    const formatMatchDescription = (matchId) => {
+        let output = ''; 
+        const match = _matches[matchId]; 
+        
+        if (match) {
+            output = `${match.name} (${formatMatchDate(match.date)})`;
+        }
+
+        return output; 
+    }; 
+
+    const getParticipantName = (matchId, index) => {
+        let output = ''; 
+        const match = _matches[matchId]; 
+        
+        if (match) {
+            const parts = match.participants.split('|'); 
+            if (parts.length > index)
+                output = parts[index]; 
+        }
+
+        return output; 
+    }; 
 
     this.showAll = () => { return _showAll; }
 
@@ -94,10 +119,10 @@ function BetsComponent(dataCoordinator) {
             const matchId = bet.matchId;
             let rowId = `div-bet-${matchId}`;
 
-            let rowHtml = `<span class='small-gold-text console-cell' style='width:300px'>${getMatchName(matchId)}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:160px'>${formatBetAmount(bet.amount)}</span>` + 
-                    `<span class='small-gold-text console-cell' style='width:100px'>${formatChosen(matchId, bet.chosenWinner)}</span>` +
-                    `<span class='small-gold-text console-cell' style='width:100px'>${formatBetResult(bet)}</span>` +
+            let rowHtml = `<span class='small-gold-text console-cell' style='width:100px'>${formatBetAmount(bet.amount)}</span>` + 
+                    `<span class='small-gold-text console-cell' style='width:160px'>on ${getParticipantName(matchId, bet.chosenWinner)}</span>` + 
+                    `<span class='small-gold-text console-cell' style='width:100px'>in ${formatMatchDescription(matchId)}</span>` +
+                    `<span class='small-gold-text console-cell' style='width:100px'>${formatMatchResult(bet, matchId)}</span>` +
                     `<span class='tooltip-text'>${formatTooltipText(bet)}<span>`;
             
             console.log($("#" + rowId));

@@ -20,7 +20,7 @@ web3.eth.getAccounts()
 
 //const contract = web3.eth.contract(abi).at(web3.toChecksumAddress("0x7bf7ae2da6013aa8de29627e29e4b9fa807d4469"));
 //const contract = new web3.eth.Contract(abi.abi, web3.utils.toChecksumAddress("0x7bf7ae2da6013aa8de29627e29e4b9fa807d4469")); 
-const contract = new web3.eth.Contract(contractInterface.abi, web3.utils.toChecksumAddress("0x431c72b2bb6f69f1cb9b8b1a47de715d26c4b4bb")); 
+const contract = new web3.eth.Contract(contractInterface.abi, web3.utils.toChecksumAddress("0x3c60b4b309fa45b2259dc9dd92bcebe50c8c5a42")); 
 
 //for(let p in contract) console.log(p);
 
@@ -91,7 +91,7 @@ const getMatchDetails = (query) => {
     });
 };
 
-const getBets = (query) => {
+const getBets = () => {
     return new Promise((resolve, reject) => {
         exception.try(() => {
             contract.methods.getUserBets().call()
