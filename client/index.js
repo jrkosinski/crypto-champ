@@ -3,9 +3,13 @@
 const express = require('express');
 const app = express();
 const exception = require('happy-try-catch').create({'logPrefix':'web3'});
-const api = require('./api/api');
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
+const bodyParser = require('body-parser'); 
+
+const api = require('./api/api');
+
+app.use(bodyParser.json()); 
 
 //TODO: fix dates issue 
 //TODO: sort by dates
@@ -68,7 +72,7 @@ function run (){
         })); 
     }));
 
-    app.get('./bets', async((req, res) => {
+    app.get('/bets', async((req, res) => {
         executeApiCall(req, res, async(() => { 
             if (req.query && req.query.id) {
                 console.log('GET /bets?' + req.query.id);
@@ -77,6 +81,14 @@ function run (){
                 console.log('GET /bets');
                 return await(api.getBets(req.query));
             }
+        })); 
+    })); 
+
+    app.post('/bets', async((req, res) => {
+        executeApiCall(req, res, async(() => { 
+            console.log('POST /bets'); 
+
+            api.placeBet(req.body); 
         })); 
     })); 
 

@@ -3,6 +3,8 @@ pragma solidity ^0.4.17;
 import "./Disableable.sol";
 import "./OracleInterface.sol";
 
+//TODO: cache matches so that we don't have to keep calling another contract (does it waste gas?)
+
 
 /// @title SportsBets
 /// @author John R. Kosinski

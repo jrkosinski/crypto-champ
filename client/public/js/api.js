@@ -47,11 +47,20 @@ function getBetDetails(matchId, callback) {
     execApiCall(config.apiUrl + '/bets?id=' + matchId, 'GET', {}, callback);
 }
 
+function placeBet(matchId, amount, winnerIndex, callback) {
+    execApiCall(config.apiUrl + '/bets', 'POST', {
+        matchId: matchId, 
+        amount: amount, 
+        winner: winnerIndex
+    }, callback);
+}
+
 $(document).ready(function () {
     window.api = {
         getMatches,
         getMatchDetails,
         getUserBets,
-        getBetDetails 
+        getBetDetails,
+        placeBet
     };
 }); 
