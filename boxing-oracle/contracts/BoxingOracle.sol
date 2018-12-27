@@ -2,6 +2,7 @@ pragma solidity ^0.4.17;
 
 import "./Ownable.sol";
 import "./DateLib.sol";
+import "./OracleInterface.sol";
 
 /*
 TEST: 
@@ -34,7 +35,7 @@ TEST:
 /// @title BoxingOracle
 /// @author John R. Kosinski
 /// @notice Collects and provides information on boxing matches and their outcomes 
-contract BoxingOracle is Ownable {
+contract BoxingOracle is Ownable, OracleInterface {
     Match[] matches; 
     mapping(bytes32 => uint) matchIdToIndex; 
 
@@ -50,15 +51,7 @@ contract BoxingOracle is Ownable {
         MatchOutcome outcome;
         int8 winner;
     }
-
-    //possible match outcomes 
-    enum MatchOutcome {
-        Pending,    //match has not been fought to decision
-        Underway,   //match has started & is underway
-        Draw,       //anything other than a clear winner (e.g. cancelled)
-        Decided     //index of participant who is the winner 
-    }
-
+    
 
     /// @notice returns the array index of the match with the given id 
     /// @dev if the match id is invalid, then the return value will be incorrect and may cause error; you must call matchExists(_matchId) first!
@@ -230,7 +223,7 @@ contract BoxingOracle is Ownable {
     }
 
     /// @notice for testing 
-    function addTestData() external onlyOwner {
+    function addTestData() public {
         addMatch("Pacquiao vs. MayWeather", "Pacquiao|Mayweather", 2, DateLib.DateTime(2018, 8, 13, 0, 0, 0, 0, 0).toUnixTimestamp());
         addMatch("Macquiao vs. Payweather", "Macquiao|Payweather", 2, DateLib.DateTime(2018, 8, 15, 0, 0, 0, 0, 0).toUnixTimestamp());
         addMatch("Pacweather vs. Macarthur", "Pacweather|Macarthur", 2, DateLib.DateTime(2018, 9, 3, 0, 0, 0, 0, 0).toUnixTimestamp());

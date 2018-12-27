@@ -1,2 +1,2 @@
-rm -r -d build
+sudo rm -r -d build
 truffle compile
