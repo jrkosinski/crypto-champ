@@ -9,7 +9,7 @@ TEST:
 - getAddress
 - matchExists(0) 
 - matchExists(1)
-- declareOutcome(0, 2)
+- declareOutcome(0, 2, 1)
 - getPendingMatches()
 - getAllMatches()
 - getMatch(0)
@@ -17,7 +17,7 @@ TEST:
 - addTestData()
 - matchExists(0) 
 - matchExists(1)
-- declareOutcome(0, 2)
+- declareOutcome(0, 2, 1)
 - getPendingMatches()               
 - getAllMatches()                   
 - getMatch(0)
@@ -39,7 +39,6 @@ contract BoxingOracle is Ownable {
     mapping(bytes32 => uint) matchIdToIndex; 
 
     using DateLib for DateLib.DateTime;
-
 
     //defines a match along with its outcome
     struct Match {
@@ -105,8 +104,10 @@ contract BoxingOracle is Ownable {
     /// @notice sets the outcome of a predefined match, permanently on the blockchain
     /// @param _matchId unique id of the match to modify
     /// @param _outcome outcome of the match 
+    /// @param _winner zero-based index of the participant who won (if there is a winner)
     function declareOutcome(bytes32 _matchId, MatchOutcome _outcome, int8 _winner) onlyOwner external {
 
+        //TODO: make sure this can't be called twice
         //require that it exists
         require(matchExists(_matchId)); 
 
