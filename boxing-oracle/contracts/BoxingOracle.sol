@@ -94,19 +94,41 @@ contract BoxingOracle is Ownable, OracleInterface {
         return id;
     }
 
+    /// @notice sets the match outcome to 'underway', only if the outcome is currently pending
+    /// @param _matchId unique match id
+    function setMatchUnderway(bytes32 _matchId) external onlyOwner {
+        require(matchExists(_matchId)); 
+        uint index = _getMatchIndex(_matchId);
+        Match storage theMatch = matches[index]; 
+        require(theMatch.outcome == MatchOutcome.Pending); 
+        theMatch.outcome = MatchOutcome.Underway;
+    }
+
+    /// @notice sets the match outcome to 'cancelled', only if the outcome is currently pending
+    /// @param _matchId unique match id
+    function setMatchCancelled(bytes32 _matchId) external onlyOwner {
+        require(matchExists(_matchId)); 
+        uint index = _getMatchIndex(_matchId);
+        Match storage theMatch = matches[index]; 
+        require(theMatch.outcome == MatchOutcome.Pending); 
+        theMatch.outcome = MatchOutcome.Cancelled;
+    }
+
     /// @notice sets the outcome of a predefined match, permanently on the blockchain
     /// @param _matchId unique id of the match to modify
     /// @param _outcome outcome of the match 
     /// @param _winner zero-based index of the participant who won (if there is a winner)
     function declareOutcome(bytes32 _matchId, MatchOutcome _outcome, int8 _winner) onlyOwner external {
 
-        //TODO: make sure this can't be called twice
         //require that it exists
         require(matchExists(_matchId)); 
 
         //get the match 
         uint index = _getMatchIndex(_matchId);
         Match storage theMatch = matches[index]; 
+
+        //make sure that match is pending (outcome not already declared)
+        require(theMatch.outcome == MatchOutcome.Underway); 
 
         if (_outcome == MatchOutcome.Decided) 
             require(_winner >= 0 && theMatch.participantCount > uint8(_winner)); 
